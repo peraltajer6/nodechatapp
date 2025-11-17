@@ -1,5 +1,3 @@
-import type * as errors from "../core/errors.js";
-export declare const parsedType: (data: any) => string;
-export default function (): {
-    localeError: errors.$ZodErrorMap;
-};
+import { type ZodErrorMap } from "../ZodError.js";
+declare const errorMap: ZodErrorMap;
+export default errorMap;

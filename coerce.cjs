@@ -31,17 +31,17 @@ exports.date = date;
 const core = __importStar(require("../core/index.cjs"));
 const schemas = __importStar(require("./schemas.cjs"));
 function string(params) {
-    return core._coercedString(schemas.ZodMiniString, params);
+    return core._coercedString(schemas.ZodString, params);
 }
 function number(params) {
-    return core._coercedNumber(schemas.ZodMiniNumber, params);
+    return core._coercedNumber(schemas.ZodNumber, params);
 }
 function boolean(params) {
-    return core._coercedBoolean(schemas.ZodMiniBoolean, params);
+    return core._coercedBoolean(schemas.ZodBoolean, params);
 }
 function bigint(params) {
-    return core._coercedBigint(schemas.ZodMiniBigInt, params);
+    return core._coercedBigint(schemas.ZodBigInt, params);
 }
 function date(params) {
-    return core._coercedDate(schemas.ZodMiniDate, params);
+    return core._coercedDate(schemas.ZodDate, params);
 }
