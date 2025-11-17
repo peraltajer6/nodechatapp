@@ -23,8 +23,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ZodMiniOptional = exports.ZodMiniTransform = exports.ZodMiniFile = exports.ZodMiniLiteral = exports.ZodMiniEnum = exports.ZodMiniSet = exports.ZodMiniMap = exports.ZodMiniRecord = exports.ZodMiniTuple = exports.ZodMiniIntersection = exports.ZodMiniDiscriminatedUnion = exports.ZodMiniUnion = exports.ZodMiniObject = exports.ZodMiniArray = exports.ZodMiniDate = exports.ZodMiniVoid = exports.ZodMiniNever = exports.ZodMiniUnknown = exports.ZodMiniAny = exports.ZodMiniNull = exports.ZodMiniUndefined = exports.ZodMiniSymbol = exports.ZodMiniBigIntFormat = exports.ZodMiniBigInt = exports.ZodMiniBoolean = exports.ZodMiniNumberFormat = exports.ZodMiniNumber = exports.ZodMiniCustomStringFormat = exports.ZodMiniJWT = exports.ZodMiniE164 = exports.ZodMiniBase64URL = exports.ZodMiniBase64 = exports.ZodMiniCIDRv6 = exports.ZodMiniCIDRv4 = exports.ZodMiniIPv6 = exports.ZodMiniIPv4 = exports.ZodMiniKSUID = exports.ZodMiniXID = exports.ZodMiniULID = exports.ZodMiniCUID2 = exports.ZodMiniCUID = exports.ZodMiniNanoID = exports.ZodMiniEmoji = exports.ZodMiniURL = exports.ZodMiniUUID = exports.ZodMiniGUID = exports.ZodMiniEmail = exports.ZodMiniStringFormat = exports.ZodMiniString = exports.ZodMiniType = void 0;
-exports.stringbool = exports.ZodMiniCustom = exports.ZodMiniPromise = exports.ZodMiniLazy = exports.ZodMiniTemplateLiteral = exports.ZodMiniReadonly = exports.ZodMiniPipe = exports.ZodMiniNaN = exports.ZodMiniCatch = exports.ZodMiniSuccess = exports.ZodMiniNonOptional = exports.ZodMiniPrefault = exports.ZodMiniDefault = exports.ZodMiniNullable = void 0;
+exports.ZodTransform = exports.ZodFile = exports.ZodLiteral = exports.ZodEnum = exports.ZodSet = exports.ZodMap = exports.ZodRecord = exports.ZodTuple = exports.ZodIntersection = exports.ZodDiscriminatedUnion = exports.ZodUnion = exports.ZodObject = exports.ZodArray = exports.ZodDate = exports.ZodVoid = exports.ZodNever = exports.ZodUnknown = exports.ZodAny = exports.ZodNull = exports.ZodUndefined = exports.ZodSymbol = exports.ZodBigIntFormat = exports.ZodBigInt = exports.ZodBoolean = exports.ZodNumberFormat = exports.ZodNumber = exports.ZodCustomStringFormat = exports.ZodJWT = exports.ZodE164 = exports.ZodBase64URL = exports.ZodBase64 = exports.ZodCIDRv6 = exports.ZodCIDRv4 = exports.ZodIPv6 = exports.ZodIPv4 = exports.ZodKSUID = exports.ZodXID = exports.ZodULID = exports.ZodCUID2 = exports.ZodCUID = exports.ZodNanoID = exports.ZodEmoji = exports.ZodURL = exports.ZodUUID = exports.ZodGUID = exports.ZodEmail = exports.ZodStringFormat = exports.ZodString = exports._ZodString = exports.ZodType = void 0;
+exports.stringbool = exports.ZodCustom = exports.ZodPromise = exports.ZodLazy = exports.ZodTemplateLiteral = exports.ZodReadonly = exports.ZodPipe = exports.ZodNaN = exports.ZodCatch = exports.ZodSuccess = exports.ZodNonOptional = exports.ZodPrefault = exports.ZodDefault = exports.ZodNullable = exports.ZodOptional = void 0;
 exports.string = string;
 exports.email = email;
 exports.guid = guid;
@@ -72,13 +72,6 @@ exports.keyof = keyof;
 exports.object = object;
 exports.strictObject = strictObject;
 exports.looseObject = looseObject;
-exports.extend = extend;
-exports.merge = merge;
-exports.pick = pick;
-exports.omit = omit;
-exports.partial = partial;
-exports.required = required;
-exports.catchall = catchall;
 exports.union = union;
 exports.discriminatedUnion = discriminatedUnion;
 exports.intersection = intersection;
@@ -104,25 +97,25 @@ exports.nan = nan;
 exports.pipe = pipe;
 exports.readonly = readonly;
 exports.templateLiteral = templateLiteral;
-exports.lazy = _lazy;
+exports.lazy = lazy;
 exports.promise = promise;
 exports.check = check;
 exports.custom = custom;
 exports.refine = refine;
+exports.superRefine = superRefine;
 exports.instanceof = _instanceof;
 exports.json = json;
+exports.preprocess = preprocess;
 const core = __importStar(require("../core/index.cjs"));
 const index_js_1 = require("../core/index.cjs");
+const checks = __importStar(require("./checks.cjs"));
+const iso = __importStar(require("./iso.cjs"));
 const parse = __importStar(require("./parse.cjs"));
-exports.ZodMiniType = core.$constructor("ZodMiniType", (inst, def) => {
-    if (!inst._zod)
-        throw new Error("Uninitialized schema in ZodMiniType.");
+exports.ZodType = core.$constructor("ZodType", (inst, def) => {
     core.$ZodType.init(inst, def);
     inst.def = def;
-    inst.parse = (data, params) => parse.parse(inst, data, params, { callee: inst.parse });
-    inst.safeParse = (data, params) => parse.safeParse(inst, data, params);
-    inst.parseAsync = async (data, params) => parse.parseAsync(inst, data, params, { callee: inst.parseAsync });
-    inst.safeParseAsync = async (data, params) => parse.safeParseAsync(inst, data, params);
+    Object.defineProperty(inst, "_def", { value: def });
+    // base methods
     inst.check = (...checks) => {
         return inst.clone({
             ...def,
@@ -134,308 +127,486 @@ exports.ZodMiniType = core.$constructor("ZodMiniType", (inst, def) => {
         // { parent: true }
         );
     };
-    inst.clone = (_def, params) => core.clone(inst, _def, params);
+    inst.clone = (def, params) => core.clone(inst, def, params);
     inst.brand = () => inst;
     inst.register = ((reg, meta) => {
         reg.add(inst, meta);
         return inst;
     });
+    // parsing
+    inst.parse = (data, params) => parse.parse(inst, data, params, { callee: inst.parse });
+    inst.safeParse = (data, params) => parse.safeParse(inst, data, params);
+    inst.parseAsync = async (data, params) => parse.parseAsync(inst, data, params, { callee: inst.parseAsync });
+    inst.safeParseAsync = async (data, params) => parse.safeParseAsync(inst, data, params);
+    inst.spa = inst.safeParseAsync;
+    // refinements
+    inst.refine = (check, params) => inst.check(refine(check, params));
+    inst.superRefine = (refinement) => inst.check(superRefine(refinement));
+    inst.overwrite = (fn) => inst.check(checks.overwrite(fn));
+    // wrappers
+    inst.optional = () => optional(inst);
+    inst.nullable = () => nullable(inst);
+    inst.nullish = () => optional(nullable(inst));
+    inst.nonoptional = (params) => nonoptional(inst, params);
+    inst.array = () => array(inst);
+    inst.or = (arg) => union([inst, arg]);
+    inst.and = (arg) => intersection(inst, arg);
+    inst.transform = (tx) => pipe(inst, transform(tx));
+    inst.default = (def) => _default(inst, def);
+    inst.prefault = (def) => prefault(inst, def);
+    // inst.coalesce = (def, params) => coalesce(inst, def, params);
+    inst.catch = (params) => _catch(inst, params);
+    inst.pipe = (target) => pipe(inst, target);
+    inst.readonly = () => readonly(inst);
+    // meta
+    inst.describe = (description) => {
+        const cl = inst.clone();
+        core.globalRegistry.add(cl, { description });
+        return cl;
+    };
+    Object.defineProperty(inst, "description", {
+        get() {
+            return core.globalRegistry.get(inst)?.description;
+        },
+        configurable: true,
+    });
+    inst.meta = (...args) => {
+        if (args.length === 0) {
+            return core.globalRegistry.get(inst);
+        }
+        const cl = inst.clone();
+        core.globalRegistry.add(cl, args[0]);
+        return cl;
+    };
+    // helpers
+    inst.isOptional = () => inst.safeParse(undefined).success;
+    inst.isNullable = () => inst.safeParse(null).success;
+    return inst;
 });
-exports.ZodMiniString = core.$constructor("ZodMiniString", (inst, def) => {
+/** @internal */
+exports._ZodString = core.$constructor("_ZodString", (inst, def) => {
     core.$ZodString.init(inst, def);
-    exports.ZodMiniType.init(inst, def);
+    exports.ZodType.init(inst, def);
+    const bag = inst._zod.bag;
+    inst.format = bag.format ?? null;
+    inst.minLength = bag.minimum ?? null;
+    inst.maxLength = bag.maximum ?? null;
+    // validations
+    inst.regex = (...args) => inst.check(checks.regex(...args));
+    inst.includes = (...args) => inst.check(checks.includes(...args));
+    inst.startsWith = (...args) => inst.check(checks.startsWith(...args));
+    inst.endsWith = (...args) => inst.check(checks.endsWith(...args));
+    inst.min = (...args) => inst.check(checks.minLength(...args));
+    inst.max = (...args) => inst.check(checks.maxLength(...args));
+    inst.length = (...args) => inst.check(checks.length(...args));
+    inst.nonempty = (...args) => inst.check(checks.minLength(1, ...args));
+    inst.lowercase = (params) => inst.check(checks.lowercase(params));
+    inst.uppercase = (params) => inst.check(checks.uppercase(params));
+    // transforms
+    inst.trim = () => inst.check(checks.trim());
+    inst.normalize = (...args) => inst.check(checks.normalize(...args));
+    inst.toLowerCase = () => inst.check(checks.toLowerCase());
+    inst.toUpperCase = () => inst.check(checks.toUpperCase());
+});
+exports.ZodString = core.$constructor("ZodString", (inst, def) => {
+    core.$ZodString.init(inst, def);
+    exports._ZodString.init(inst, def);
+    inst.email = (params) => inst.check(core._email(exports.ZodEmail, params));
+    inst.url = (params) => inst.check(core._url(exports.ZodURL, params));
+    inst.jwt = (params) => inst.check(core._jwt(exports.ZodJWT, params));
+    inst.emoji = (params) => inst.check(core._emoji(exports.ZodEmoji, params));
+    inst.guid = (params) => inst.check(core._guid(exports.ZodGUID, params));
+    inst.uuid = (params) => inst.check(core._uuid(exports.ZodUUID, params));
+    inst.uuidv4 = (params) => inst.check(core._uuidv4(exports.ZodUUID, params));
+    inst.uuidv6 = (params) => inst.check(core._uuidv6(exports.ZodUUID, params));
+    inst.uuidv7 = (params) => inst.check(core._uuidv7(exports.ZodUUID, params));
+    inst.nanoid = (params) => inst.check(core._nanoid(exports.ZodNanoID, params));
+    inst.guid = (params) => inst.check(core._guid(exports.ZodGUID, params));
+    inst.cuid = (params) => inst.check(core._cuid(exports.ZodCUID, params));
+    inst.cuid2 = (params) => inst.check(core._cuid2(exports.ZodCUID2, params));
+    inst.ulid = (params) => inst.check(core._ulid(exports.ZodULID, params));
+    inst.base64 = (params) => inst.check(core._base64(exports.ZodBase64, params));
+    inst.base64url = (params) => inst.check(core._base64url(exports.ZodBase64URL, params));
+    inst.xid = (params) => inst.check(core._xid(exports.ZodXID, params));
+    inst.ksuid = (params) => inst.check(core._ksuid(exports.ZodKSUID, params));
+    inst.ipv4 = (params) => inst.check(core._ipv4(exports.ZodIPv4, params));
+    inst.ipv6 = (params) => inst.check(core._ipv6(exports.ZodIPv6, params));
+    inst.cidrv4 = (params) => inst.check(core._cidrv4(exports.ZodCIDRv4, params));
+    inst.cidrv6 = (params) => inst.check(core._cidrv6(exports.ZodCIDRv6, params));
+    inst.e164 = (params) => inst.check(core._e164(exports.ZodE164, params));
+    // iso
+    inst.datetime = (params) => inst.check(iso.datetime(params));
+    inst.date = (params) => inst.check(iso.date(params));
+    inst.time = (params) => inst.check(iso.time(params));
+    inst.duration = (params) => inst.check(iso.duration(params));
 });
 function string(params) {
-    return core._string(exports.ZodMiniString, params);
+    return core._string(exports.ZodString, params);
 }
-exports.ZodMiniStringFormat = core.$constructor("ZodMiniStringFormat", (inst, def) => {
+exports.ZodStringFormat = core.$constructor("ZodStringFormat", (inst, def) => {
     core.$ZodStringFormat.init(inst, def);
-    exports.ZodMiniString.init(inst, def);
+    exports._ZodString.init(inst, def);
 });
-exports.ZodMiniEmail = core.$constructor("ZodMiniEmail", (inst, def) => {
+exports.ZodEmail = core.$constructor("ZodEmail", (inst, def) => {
+    // ZodStringFormat.init(inst, def);
     core.$ZodEmail.init(inst, def);
-    exports.ZodMiniStringFormat.init(inst, def);
+    exports.ZodStringFormat.init(inst, def);
 });
 function email(params) {
-    return core._email(exports.ZodMiniEmail, params);
+    return core._email(exports.ZodEmail, params);
 }
-exports.ZodMiniGUID = core.$constructor("ZodMiniGUID", (inst, def) => {
+exports.ZodGUID = core.$constructor("ZodGUID", (inst, def) => {
+    // ZodStringFormat.init(inst, def);
     core.$ZodGUID.init(inst, def);
-    exports.ZodMiniStringFormat.init(inst, def);
+    exports.ZodStringFormat.init(inst, def);
 });
 function guid(params) {
-    return core._guid(exports.ZodMiniGUID, params);
+    return core._guid(exports.ZodGUID, params);
 }
-exports.ZodMiniUUID = core.$constructor("ZodMiniUUID", (inst, def) => {
+exports.ZodUUID = core.$constructor("ZodUUID", (inst, def) => {
+    // ZodStringFormat.init(inst, def);
     core.$ZodUUID.init(inst, def);
-    exports.ZodMiniStringFormat.init(inst, def);
+    exports.ZodStringFormat.init(inst, def);
 });
 function uuid(params) {
-    return core._uuid(exports.ZodMiniUUID, params);
+    return core._uuid(exports.ZodUUID, params);
 }
 function uuidv4(params) {
-    return core._uuidv4(exports.ZodMiniUUID, params);
+    return core._uuidv4(exports.ZodUUID, params);
 }
-// ZodMiniUUIDv6
+// ZodUUIDv6
 function uuidv6(params) {
-    return core._uuidv6(exports.ZodMiniUUID, params);
+    return core._uuidv6(exports.ZodUUID, params);
 }
-// ZodMiniUUIDv7
+// ZodUUIDv7
 function uuidv7(params) {
-    return core._uuidv7(exports.ZodMiniUUID, params);
+    return core._uuidv7(exports.ZodUUID, params);
 }
-exports.ZodMiniURL = core.$constructor("ZodMiniURL", (inst, def) => {
+exports.ZodURL = core.$constructor("ZodURL", (inst, def) => {
+    // ZodStringFormat.init(inst, def);
     core.$ZodURL.init(inst, def);
-    exports.ZodMiniStringFormat.init(inst, def);
+    exports.ZodStringFormat.init(inst, def);
 });
 function url(params) {
-    return core._url(exports.ZodMiniURL, params);
+    return core._url(exports.ZodURL, params);
 }
-exports.ZodMiniEmoji = core.$constructor("ZodMiniEmoji", (inst, def) => {
+exports.ZodEmoji = core.$constructor("ZodEmoji", (inst, def) => {
+    // ZodStringFormat.init(inst, def);
     core.$ZodEmoji.init(inst, def);
-    exports.ZodMiniStringFormat.init(inst, def);
+    exports.ZodStringFormat.init(inst, def);
 });
 function emoji(params) {
-    return core._emoji(exports.ZodMiniEmoji, params);
+    return core._emoji(exports.ZodEmoji, params);
 }
-exports.ZodMiniNanoID = core.$constructor("ZodMiniNanoID", (inst, def) => {
+exports.ZodNanoID = core.$constructor("ZodNanoID", (inst, def) => {
+    // ZodStringFormat.init(inst, def);
     core.$ZodNanoID.init(inst, def);
-    exports.ZodMiniStringFormat.init(inst, def);
+    exports.ZodStringFormat.init(inst, def);
 });
 function nanoid(params) {
-    return core._nanoid(exports.ZodMiniNanoID, params);
+    return core._nanoid(exports.ZodNanoID, params);
 }
-exports.ZodMiniCUID = core.$constructor("ZodMiniCUID", (inst, def) => {
+exports.ZodCUID = core.$constructor("ZodCUID", (inst, def) => {
+    // ZodStringFormat.init(inst, def);
     core.$ZodCUID.init(inst, def);
-    exports.ZodMiniStringFormat.init(inst, def);
+    exports.ZodStringFormat.init(inst, def);
 });
 function cuid(params) {
-    return core._cuid(exports.ZodMiniCUID, params);
+    return core._cuid(exports.ZodCUID, params);
 }
-exports.ZodMiniCUID2 = core.$constructor("ZodMiniCUID2", (inst, def) => {
+exports.ZodCUID2 = core.$constructor("ZodCUID2", (inst, def) => {
+    // ZodStringFormat.init(inst, def);
     core.$ZodCUID2.init(inst, def);
-    exports.ZodMiniStringFormat.init(inst, def);
+    exports.ZodStringFormat.init(inst, def);
 });
 function cuid2(params) {
-    return core._cuid2(exports.ZodMiniCUID2, params);
+    return core._cuid2(exports.ZodCUID2, params);
 }
-exports.ZodMiniULID = core.$constructor("ZodMiniULID", (inst, def) => {
+exports.ZodULID = core.$constructor("ZodULID", (inst, def) => {
+    // ZodStringFormat.init(inst, def);
     core.$ZodULID.init(inst, def);
-    exports.ZodMiniStringFormat.init(inst, def);
+    exports.ZodStringFormat.init(inst, def);
 });
 function ulid(params) {
-    return core._ulid(exports.ZodMiniULID, params);
+    return core._ulid(exports.ZodULID, params);
 }
-exports.ZodMiniXID = core.$constructor("ZodMiniXID", (inst, def) => {
+exports.ZodXID = core.$constructor("ZodXID", (inst, def) => {
+    // ZodStringFormat.init(inst, def);
     core.$ZodXID.init(inst, def);
-    exports.ZodMiniStringFormat.init(inst, def);
+    exports.ZodStringFormat.init(inst, def);
 });
 function xid(params) {
-    return core._xid(exports.ZodMiniXID, params);
+    return core._xid(exports.ZodXID, params);
 }
-exports.ZodMiniKSUID = core.$constructor("ZodMiniKSUID", (inst, def) => {
+exports.ZodKSUID = core.$constructor("ZodKSUID", (inst, def) => {
+    // ZodStringFormat.init(inst, def);
     core.$ZodKSUID.init(inst, def);
-    exports.ZodMiniStringFormat.init(inst, def);
+    exports.ZodStringFormat.init(inst, def);
 });
 function ksuid(params) {
-    return core._ksuid(exports.ZodMiniKSUID, params);
+    return core._ksuid(exports.ZodKSUID, params);
 }
-exports.ZodMiniIPv4 = core.$constructor("ZodMiniIPv4", (inst, def) => {
+exports.ZodIPv4 = core.$constructor("ZodIPv4", (inst, def) => {
+    // ZodStringFormat.init(inst, def);
     core.$ZodIPv4.init(inst, def);
-    exports.ZodMiniStringFormat.init(inst, def);
+    exports.ZodStringFormat.init(inst, def);
 });
 function ipv4(params) {
-    return core._ipv4(exports.ZodMiniIPv4, params);
+    return core._ipv4(exports.ZodIPv4, params);
 }
-exports.ZodMiniIPv6 = core.$constructor("ZodMiniIPv6", (inst, def) => {
+exports.ZodIPv6 = core.$constructor("ZodIPv6", (inst, def) => {
+    // ZodStringFormat.init(inst, def);
     core.$ZodIPv6.init(inst, def);
-    exports.ZodMiniStringFormat.init(inst, def);
+    exports.ZodStringFormat.init(inst, def);
 });
 function ipv6(params) {
-    return core._ipv6(exports.ZodMiniIPv6, params);
+    return core._ipv6(exports.ZodIPv6, params);
 }
-exports.ZodMiniCIDRv4 = core.$constructor("ZodMiniCIDRv4", (inst, def) => {
+exports.ZodCIDRv4 = core.$constructor("ZodCIDRv4", (inst, def) => {
     core.$ZodCIDRv4.init(inst, def);
-    exports.ZodMiniStringFormat.init(inst, def);
+    exports.ZodStringFormat.init(inst, def);
 });
 function cidrv4(params) {
-    return core._cidrv4(exports.ZodMiniCIDRv4, params);
+    return core._cidrv4(exports.ZodCIDRv4, params);
 }
-exports.ZodMiniCIDRv6 = core.$constructor("ZodMiniCIDRv6", (inst, def) => {
+exports.ZodCIDRv6 = core.$constructor("ZodCIDRv6", (inst, def) => {
     core.$ZodCIDRv6.init(inst, def);
-    exports.ZodMiniStringFormat.init(inst, def);
+    exports.ZodStringFormat.init(inst, def);
 });
 function cidrv6(params) {
-    return core._cidrv6(exports.ZodMiniCIDRv6, params);
+    return core._cidrv6(exports.ZodCIDRv6, params);
 }
-exports.ZodMiniBase64 = core.$constructor("ZodMiniBase64", (inst, def) => {
+exports.ZodBase64 = core.$constructor("ZodBase64", (inst, def) => {
+    // ZodStringFormat.init(inst, def);
     core.$ZodBase64.init(inst, def);
-    exports.ZodMiniStringFormat.init(inst, def);
+    exports.ZodStringFormat.init(inst, def);
 });
 function base64(params) {
-    return core._base64(exports.ZodMiniBase64, params);
+    return core._base64(exports.ZodBase64, params);
 }
-exports.ZodMiniBase64URL = core.$constructor("ZodMiniBase64URL", (inst, def) => {
+exports.ZodBase64URL = core.$constructor("ZodBase64URL", (inst, def) => {
+    // ZodStringFormat.init(inst, def);
     core.$ZodBase64URL.init(inst, def);
-    exports.ZodMiniStringFormat.init(inst, def);
+    exports.ZodStringFormat.init(inst, def);
 });
 function base64url(params) {
-    return core._base64url(exports.ZodMiniBase64URL, params);
+    return core._base64url(exports.ZodBase64URL, params);
 }
-exports.ZodMiniE164 = core.$constructor("ZodMiniE164", (inst, def) => {
+exports.ZodE164 = core.$constructor("ZodE164", (inst, def) => {
+    // ZodStringFormat.init(inst, def);
     core.$ZodE164.init(inst, def);
-    exports.ZodMiniStringFormat.init(inst, def);
+    exports.ZodStringFormat.init(inst, def);
 });
 function e164(params) {
-    return core._e164(exports.ZodMiniE164, params);
+    return core._e164(exports.ZodE164, params);
 }
-exports.ZodMiniJWT = core.$constructor("ZodMiniJWT", (inst, def) => {
+exports.ZodJWT = core.$constructor("ZodJWT", (inst, def) => {
+    // ZodStringFormat.init(inst, def);
     core.$ZodJWT.init(inst, def);
-    exports.ZodMiniStringFormat.init(inst, def);
+    exports.ZodStringFormat.init(inst, def);
 });
 function jwt(params) {
-    return core._jwt(exports.ZodMiniJWT, params);
+    return core._jwt(exports.ZodJWT, params);
 }
-exports.ZodMiniCustomStringFormat = core.$constructor("ZodMiniCustomStringFormat", (inst, def) => {
+exports.ZodCustomStringFormat = core.$constructor("ZodCustomStringFormat", (inst, def) => {
+    // ZodStringFormat.init(inst, def);
     core.$ZodCustomStringFormat.init(inst, def);
-    exports.ZodMiniStringFormat.init(inst, def);
+    exports.ZodStringFormat.init(inst, def);
 });
 function stringFormat(format, fnOrRegex, _params = {}) {
-    return core._stringFormat(exports.ZodMiniCustomStringFormat, format, fnOrRegex, _params);
+    return core._stringFormat(exports.ZodCustomStringFormat, format, fnOrRegex, _params);
 }
-exports.ZodMiniNumber = core.$constructor("ZodMiniNumber", (inst, def) => {
+exports.ZodNumber = core.$constructor("ZodNumber", (inst, def) => {
     core.$ZodNumber.init(inst, def);
-    exports.ZodMiniType.init(inst, def);
+    exports.ZodType.init(inst, def);
+    inst.gt = (value, params) => inst.check(checks.gt(value, params));
+    inst.gte = (value, params) => inst.check(checks.gte(value, params));
+    inst.min = (value, params) => inst.check(checks.gte(value, params));
+    inst.lt = (value, params) => inst.check(checks.lt(value, params));
+    inst.lte = (value, params) => inst.check(checks.lte(value, params));
+    inst.max = (value, params) => inst.check(checks.lte(value, params));
+    inst.int = (params) => inst.check(int(params));
+    inst.safe = (params) => inst.check(int(params));
+    inst.positive = (params) => inst.check(checks.gt(0, params));
+    inst.nonnegative = (params) => inst.check(checks.gte(0, params));
+    inst.negative = (params) => inst.check(checks.lt(0, params));
+    inst.nonpositive = (params) => inst.check(checks.lte(0, params));
+    inst.multipleOf = (value, params) => inst.check(checks.multipleOf(value, params));
+    inst.step = (value, params) => inst.check(checks.multipleOf(value, params));
+    // inst.finite = (params) => inst.check(core.finite(params));
+    inst.finite = () => inst;
+    const bag = inst._zod.bag;
+    inst.minValue =
+        Math.max(bag.minimum ?? Number.NEGATIVE_INFINITY, bag.exclusiveMinimum ?? Number.NEGATIVE_INFINITY) ?? null;
+    inst.maxValue =
+        Math.min(bag.maximum ?? Number.POSITIVE_INFINITY, bag.exclusiveMaximum ?? Number.POSITIVE_INFINITY) ?? null;
+    inst.isInt = (bag.format ?? "").includes("int") || Number.isSafeInteger(bag.multipleOf ?? 0.5);
+    inst.isFinite = true;
+    inst.format = bag.format ?? null;
 });
 function number(params) {
-    return core._number(exports.ZodMiniNumber, params);
+    return core._number(exports.ZodNumber, params);
 }
-exports.ZodMiniNumberFormat = core.$constructor("ZodMiniNumberFormat", (inst, def) => {
+exports.ZodNumberFormat = core.$constructor("ZodNumberFormat", (inst, def) => {
     core.$ZodNumberFormat.init(inst, def);
-    exports.ZodMiniNumber.init(inst, def);
+    exports.ZodNumber.init(inst, def);
 });
-// int
 function int(params) {
-    return core._int(exports.ZodMiniNumberFormat, params);
+    return core._int(exports.ZodNumberFormat, params);
 }
-// float32
 function float32(params) {
-    return core._float32(exports.ZodMiniNumberFormat, params);
+    return core._float32(exports.ZodNumberFormat, params);
 }
-// float64
 function float64(params) {
-    return core._float64(exports.ZodMiniNumberFormat, params);
+    return core._float64(exports.ZodNumberFormat, params);
 }
-// int32
 function int32(params) {
-    return core._int32(exports.ZodMiniNumberFormat, params);
+    return core._int32(exports.ZodNumberFormat, params);
 }
-// uint32
 function uint32(params) {
-    return core._uint32(exports.ZodMiniNumberFormat, params);
+    return core._uint32(exports.ZodNumberFormat, params);
 }
-exports.ZodMiniBoolean = core.$constructor("ZodMiniBoolean", (inst, def) => {
+exports.ZodBoolean = core.$constructor("ZodBoolean", (inst, def) => {
     core.$ZodBoolean.init(inst, def);
-    exports.ZodMiniType.init(inst, def);
+    exports.ZodType.init(inst, def);
 });
 function boolean(params) {
-    return core._boolean(exports.ZodMiniBoolean, params);
+    return core._boolean(exports.ZodBoolean, params);
 }
-exports.ZodMiniBigInt = core.$constructor("ZodMiniBigInt", (inst, def) => {
+exports.ZodBigInt = core.$constructor("ZodBigInt", (inst, def) => {
     core.$ZodBigInt.init(inst, def);
-    exports.ZodMiniType.init(inst, def);
+    exports.ZodType.init(inst, def);
+    inst.gte = (value, params) => inst.check(checks.gte(value, params));
+    inst.min = (value, params) => inst.check(checks.gte(value, params));
+    inst.gt = (value, params) => inst.check(checks.gt(value, params));
+    inst.gte = (value, params) => inst.check(checks.gte(value, params));
+    inst.min = (value, params) => inst.check(checks.gte(value, params));
+    inst.lt = (value, params) => inst.check(checks.lt(value, params));
+    inst.lte = (value, params) => inst.check(checks.lte(value, params));
+    inst.max = (value, params) => inst.check(checks.lte(value, params));
+    inst.positive = (params) => inst.check(checks.gt(BigInt(0), params));
+    inst.negative = (params) => inst.check(checks.lt(BigInt(0), params));
+    inst.nonpositive = (params) => inst.check(checks.lte(BigInt(0), params));
+    inst.nonnegative = (params) => inst.check(checks.gte(BigInt(0), params));
+    inst.multipleOf = (value, params) => inst.check(checks.multipleOf(value, params));
+    const bag = inst._zod.bag;
+    inst.minValue = bag.minimum ?? null;
+    inst.maxValue = bag.maximum ?? null;
+    inst.format = bag.format ?? null;
 });
 function bigint(params) {
-    return core._bigint(exports.ZodMiniBigInt, params);
+    return core._bigint(exports.ZodBigInt, params);
 }
-exports.ZodMiniBigIntFormat = core.$constructor("ZodMiniBigIntFormat", (inst, def) => {
+exports.ZodBigIntFormat = core.$constructor("ZodBigIntFormat", (inst, def) => {
     core.$ZodBigIntFormat.init(inst, def);
-    exports.ZodMiniBigInt.init(inst, def);
+    exports.ZodBigInt.init(inst, def);
 });
 // int64
 function int64(params) {
-    return core._int64(exports.ZodMiniBigIntFormat, params);
+    return core._int64(exports.ZodBigIntFormat, params);
 }
 // uint64
 function uint64(params) {
-    return core._uint64(exports.ZodMiniBigIntFormat, params);
+    return core._uint64(exports.ZodBigIntFormat, params);
 }
-exports.ZodMiniSymbol = core.$constructor("ZodMiniSymbol", (inst, def) => {
+exports.ZodSymbol = core.$constructor("ZodSymbol", (inst, def) => {
     core.$ZodSymbol.init(inst, def);
-    exports.ZodMiniType.init(inst, def);
+    exports.ZodType.init(inst, def);
 });
 function symbol(params) {
-    return core._symbol(exports.ZodMiniSymbol, params);
+    return core._symbol(exports.ZodSymbol, params);
 }
-exports.ZodMiniUndefined = core.$constructor("ZodMiniUndefined", (inst, def) => {
+exports.ZodUndefined = core.$constructor("ZodUndefined", (inst, def) => {
     core.$ZodUndefined.init(inst, def);
-    exports.ZodMiniType.init(inst, def);
+    exports.ZodType.init(inst, def);
 });
 function _undefined(params) {
-    return core._undefined(exports.ZodMiniUndefined, params);
+    return core._undefined(exports.ZodUndefined, params);
 }
-exports.ZodMiniNull = core.$constructor("ZodMiniNull", (inst, def) => {
+exports.ZodNull = core.$constructor("ZodNull", (inst, def) => {
     core.$ZodNull.init(inst, def);
-    exports.ZodMiniType.init(inst, def);
+    exports.ZodType.init(inst, def);
 });
 function _null(params) {
-    return core._null(exports.ZodMiniNull, params);
+    return core._null(exports.ZodNull, params);
 }
-exports.ZodMiniAny = core.$constructor("ZodMiniAny", (inst, def) => {
+exports.ZodAny = core.$constructor("ZodAny", (inst, def) => {
     core.$ZodAny.init(inst, def);
-    exports.ZodMiniType.init(inst, def);
+    exports.ZodType.init(inst, def);
 });
 function any() {
-    return core._any(exports.ZodMiniAny);
+    return core._any(exports.ZodAny);
 }
-exports.ZodMiniUnknown = core.$constructor("ZodMiniUnknown", (inst, def) => {
+exports.ZodUnknown = core.$constructor("ZodUnknown", (inst, def) => {
     core.$ZodUnknown.init(inst, def);
-    exports.ZodMiniType.init(inst, def);
+    exports.ZodType.init(inst, def);
 });
 function unknown() {
-    return core._unknown(exports.ZodMiniUnknown);
+    return core._unknown(exports.ZodUnknown);
 }
-exports.ZodMiniNever = core.$constructor("ZodMiniNever", (inst, def) => {
+exports.ZodNever = core.$constructor("ZodNever", (inst, def) => {
     core.$ZodNever.init(inst, def);
-    exports.ZodMiniType.init(inst, def);
+    exports.ZodType.init(inst, def);
 });
 function never(params) {
-    return core._never(exports.ZodMiniNever, params);
+    return core._never(exports.ZodNever, params);
 }
-exports.ZodMiniVoid = core.$constructor("ZodMiniVoid", (inst, def) => {
+exports.ZodVoid = core.$constructor("ZodVoid", (inst, def) => {
     core.$ZodVoid.init(inst, def);
-    exports.ZodMiniType.init(inst, def);
+    exports.ZodType.init(inst, def);
 });
 function _void(params) {
-    return core._void(exports.ZodMiniVoid, params);
+    return core._void(exports.ZodVoid, params);
 }
-exports.ZodMiniDate = core.$constructor("ZodMiniDate", (inst, def) => {
+exports.ZodDate = core.$constructor("ZodDate", (inst, def) => {
     core.$ZodDate.init(inst, def);
-    exports.ZodMiniType.init(inst, def);
+    exports.ZodType.init(inst, def);
+    inst.min = (value, params) => inst.check(checks.gte(value, params));
+    inst.max = (value, params) => inst.check(checks.lte(value, params));
+    const c = inst._zod.bag;
+    inst.minDate = c.minimum ? new Date(c.minimum) : null;
+    inst.maxDate = c.maximum ? new Date(c.maximum) : null;
 });
 function date(params) {
-    return core._date(exports.ZodMiniDate, params);
+    return core._date(exports.ZodDate, params);
 }
-exports.ZodMiniArray = core.$constructor("ZodMiniArray", (inst, def) => {
+exports.ZodArray = core.$constructor("ZodArray", (inst, def) => {
     core.$ZodArray.init(inst, def);
-    exports.ZodMiniType.init(inst, def);
+    exports.ZodType.init(inst, def);
+    inst.element = def.element;
+    inst.min = (minLength, params) => inst.check(checks.minLength(minLength, params));
+    inst.nonempty = (params) => inst.check(checks.minLength(1, params));
+    inst.max = (maxLength, params) => inst.check(checks.maxLength(maxLength, params));
+    inst.length = (len, params) => inst.check(checks.length(len, params));
+    inst.unwrap = () => inst.element;
 });
 function array(element, params) {
-    return new exports.ZodMiniArray({
-        type: "array",
-        element: element,
-        ...index_js_1.util.normalizeParams(params),
-    });
+    return core._array(exports.ZodArray, element, params);
 }
 // .keyof
 function keyof(schema) {
     const shape = schema._zod.def.shape;
     return literal(Object.keys(shape));
 }
-exports.ZodMiniObject = core.$constructor("ZodMiniObject", (inst, def) => {
+exports.ZodObject = core.$constructor("ZodObject", (inst, def) => {
     core.$ZodObject.init(inst, def);
-    exports.ZodMiniType.init(inst, def);
+    exports.ZodType.init(inst, def);
     index_js_1.util.defineLazy(inst, "shape", () => def.shape);
+    inst.keyof = () => _enum(Object.keys(inst._zod.def.shape));
+    inst.catchall = (catchall) => inst.clone({ ...inst._zod.def, catchall: catchall });
+    inst.passthrough = () => inst.clone({ ...inst._zod.def, catchall: unknown() });
+    // inst.nonstrict = () => inst.clone({ ...inst._zod.def, catchall: api.unknown() });
+    inst.loose = () => inst.clone({ ...inst._zod.def, catchall: unknown() });
+    inst.strict = () => inst.clone({ ...inst._zod.def, catchall: never() });
+    inst.strip = () => inst.clone({ ...inst._zod.def, catchall: undefined });
+    inst.extend = (incoming) => {
+        return index_js_1.util.extend(inst, incoming);
+    };
+    inst.merge = (other) => index_js_1.util.merge(inst, other);
+    inst.pick = (mask) => index_js_1.util.pick(inst, mask);
+    inst.omit = (mask) => index_js_1.util.omit(inst, mask);
+    inst.partial = (...args) => index_js_1.util.partial(exports.ZodOptional, inst, args[0]);
+    inst.required = (...args) => index_js_1.util.required(exports.ZodNonOptional, inst, args[0]);
 });
 function object(shape, params) {
     const def = {
@@ -446,13 +617,12 @@ function object(shape, params) {
         },
         ...index_js_1.util.normalizeParams(params),
     };
-    return new exports.ZodMiniObject(def);
+    return new exports.ZodObject(def);
 }
 // strictObject
 function strictObject(shape, params) {
-    return new exports.ZodMiniObject({
+    return new exports.ZodObject({
         type: "object",
-        // shape: shape as core.$ZodLooseShape,
         get shape() {
             index_js_1.util.assignProp(this, "shape", { ...shape });
             return this.shape;
@@ -463,142 +633,165 @@ function strictObject(shape, params) {
 }
 // looseObject
 function looseObject(shape, params) {
-    return new exports.ZodMiniObject({
+    return new exports.ZodObject({
         type: "object",
-        // shape: shape as core.$ZodLooseShape,
         get shape() {
             index_js_1.util.assignProp(this, "shape", { ...shape });
             return this.shape;
         },
-        // get optional() {
-        //   return util.optionalKeys(shape);
-        // },
         catchall: unknown(),
         ...index_js_1.util.normalizeParams(params),
     });
 }
-// object methods
-function extend(schema, shape) {
-    return index_js_1.util.extend(schema, shape);
-}
-function merge(schema, shape) {
-    return index_js_1.util.extend(schema, shape);
-}
-function pick(schema, mask) {
-    return index_js_1.util.pick(schema, mask);
-}
-// .omit
-function omit(schema, mask) {
-    return index_js_1.util.omit(schema, mask);
-}
-function partial(schema, mask) {
-    return index_js_1.util.partial(exports.ZodMiniOptional, schema, mask);
-}
-function required(schema, mask) {
-    return index_js_1.util.required(exports.ZodMiniNonOptional, schema, mask);
-}
-function catchall(inst, catchall) {
-    return inst.clone({ ...inst._zod.def, catchall: catchall });
-}
-exports.ZodMiniUnion = core.$constructor("ZodMiniUnion", (inst, def) => {
+exports.ZodUnion = core.$constructor("ZodUnion", (inst, def) => {
     core.$ZodUnion.init(inst, def);
-    exports.ZodMiniType.init(inst, def);
+    exports.ZodType.init(inst, def);
+    inst.options = def.options;
 });
 function union(options, params) {
-    return new exports.ZodMiniUnion({
+    return new exports.ZodUnion({
         type: "union",
         options: options,
         ...index_js_1.util.normalizeParams(params),
     });
 }
-exports.ZodMiniDiscriminatedUnion = core.$constructor("ZodMiniDiscriminatedUnion", (inst, def) => {
+exports.ZodDiscriminatedUnion = core.$constructor("ZodDiscriminatedUnion", (inst, def) => {
+    exports.ZodUnion.init(inst, def);
     core.$ZodDiscriminatedUnion.init(inst, def);
-    exports.ZodMiniType.init(inst, def);
 });
 function discriminatedUnion(discriminator, options, params) {
-    return new exports.ZodMiniDiscriminatedUnion({
+    // const [options, params] = args;
+    return new exports.ZodDiscriminatedUnion({
         type: "union",
         options,
         discriminator,
         ...index_js_1.util.normalizeParams(params),
     });
 }
-exports.ZodMiniIntersection = core.$constructor("ZodMiniIntersection", (inst, def) => {
+exports.ZodIntersection = core.$constructor("ZodIntersection", (inst, def) => {
     core.$ZodIntersection.init(inst, def);
-    exports.ZodMiniType.init(inst, def);
+    exports.ZodType.init(inst, def);
 });
 function intersection(left, right) {
-    return new exports.ZodMiniIntersection({
+    return new exports.ZodIntersection({
         type: "intersection",
         left: left,
         right: right,
     });
 }
-exports.ZodMiniTuple = core.$constructor("ZodMiniTuple", (inst, def) => {
+exports.ZodTuple = core.$constructor("ZodTuple", (inst, def) => {
     core.$ZodTuple.init(inst, def);
-    exports.ZodMiniType.init(inst, def);
+    exports.ZodType.init(inst, def);
+    inst.rest = (rest) => inst.clone({
+        ...inst._zod.def,
+        rest: rest,
+    });
 });
 function tuple(items, _paramsOrRest, _params) {
     const hasRest = _paramsOrRest instanceof core.$ZodType;
     const params = hasRest ? _params : _paramsOrRest;
     const rest = hasRest ? _paramsOrRest : null;
-    return new exports.ZodMiniTuple({
+    return new exports.ZodTuple({
         type: "tuple",
         items: items,
         rest,
         ...index_js_1.util.normalizeParams(params),
     });
 }
-exports.ZodMiniRecord = core.$constructor("ZodMiniRecord", (inst, def) => {
+exports.ZodRecord = core.$constructor("ZodRecord", (inst, def) => {
     core.$ZodRecord.init(inst, def);
-    exports.ZodMiniType.init(inst, def);
+    exports.ZodType.init(inst, def);
+    inst.keyType = def.keyType;
+    inst.valueType = def.valueType;
 });
 function record(keyType, valueType, params) {
-    return new exports.ZodMiniRecord({
+    return new exports.ZodRecord({
         type: "record",
         keyType,
         valueType: valueType,
         ...index_js_1.util.normalizeParams(params),
     });
 }
+// type alksjf = core.output<core.$ZodRecordKey>;
 function partialRecord(keyType, valueType, params) {
-    return new exports.ZodMiniRecord({
+    return new exports.ZodRecord({
         type: "record",
         keyType: union([keyType, never()]),
         valueType: valueType,
         ...index_js_1.util.normalizeParams(params),
     });
 }
-exports.ZodMiniMap = core.$constructor("ZodMiniMap", (inst, def) => {
+exports.ZodMap = core.$constructor("ZodMap", (inst, def) => {
     core.$ZodMap.init(inst, def);
-    exports.ZodMiniType.init(inst, def);
+    exports.ZodType.init(inst, def);
+    inst.keyType = def.keyType;
+    inst.valueType = def.valueType;
 });
 function map(keyType, valueType, params) {
-    return new exports.ZodMiniMap({
+    return new exports.ZodMap({
         type: "map",
         keyType: keyType,
         valueType: valueType,
         ...index_js_1.util.normalizeParams(params),
     });
 }
-exports.ZodMiniSet = core.$constructor("ZodMiniSet", (inst, def) => {
+exports.ZodSet = core.$constructor("ZodSet", (inst, def) => {
     core.$ZodSet.init(inst, def);
-    exports.ZodMiniType.init(inst, def);
+    exports.ZodType.init(inst, def);
+    inst.min = (...args) => inst.check(core._minSize(...args));
+    inst.nonempty = (params) => inst.check(core._minSize(1, params));
+    inst.max = (...args) => inst.check(core._maxSize(...args));
+    inst.size = (...args) => inst.check(core._size(...args));
 });
 function set(valueType, params) {
-    return new exports.ZodMiniSet({
+    return new exports.ZodSet({
         type: "set",
         valueType: valueType,
         ...index_js_1.util.normalizeParams(params),
     });
 }
-exports.ZodMiniEnum = core.$constructor("ZodMiniEnum", (inst, def) => {
+exports.ZodEnum = core.$constructor("ZodEnum", (inst, def) => {
     core.$ZodEnum.init(inst, def);
-    exports.ZodMiniType.init(inst, def);
+    exports.ZodType.init(inst, def);
+    inst.enum = def.entries;
+    inst.options = Object.values(def.entries);
+    const keys = new Set(Object.keys(def.entries));
+    inst.extract = (values, params) => {
+        const newEntries = {};
+        for (const value of values) {
+            if (keys.has(value)) {
+                newEntries[value] = def.entries[value];
+            }
+            else
+                throw new Error(`Key ${value} not found in enum`);
+        }
+        return new exports.ZodEnum({
+            ...def,
+            checks: [],
+            ...index_js_1.util.normalizeParams(params),
+            entries: newEntries,
+        });
+    };
+    inst.exclude = (values, params) => {
+        const newEntries = { ...def.entries };
+        for (const value of values) {
+            if (keys.has(value)) {
+                delete newEntries[value];
+            }
+            else
+                throw new Error(`Key ${value} not found in enum`);
+        }
+        return new exports.ZodEnum({
+            ...def,
+            checks: [],
+            ...index_js_1.util.normalizeParams(params),
+            entries: newEntries,
+        });
+    };
 });
 function _enum(values, params) {
     const entries = Array.isArray(values) ? Object.fromEntries(values.map((v) => [v, v])) : values;
-    return new exports.ZodMiniEnum({
+    return new exports.ZodEnum({
         type: "enum",
         entries,
         ...index_js_1.util.normalizeParams(params),
@@ -612,56 +805,97 @@ function _enum(values, params) {
  * ```
  */
 function nativeEnum(entries, params) {
-    return new exports.ZodMiniEnum({
+    return new exports.ZodEnum({
         type: "enum",
         entries,
         ...index_js_1.util.normalizeParams(params),
     });
 }
-exports.ZodMiniLiteral = core.$constructor("ZodMiniLiteral", (inst, def) => {
+exports.ZodLiteral = core.$constructor("ZodLiteral", (inst, def) => {
     core.$ZodLiteral.init(inst, def);
-    exports.ZodMiniType.init(inst, def);
+    exports.ZodType.init(inst, def);
+    inst.values = new Set(def.values);
+    Object.defineProperty(inst, "value", {
+        get() {
+            if (def.values.length > 1) {
+                throw new Error("This schema contains multiple valid literal values. Use `.values` instead.");
+            }
+            return def.values[0];
+        },
+    });
 });
 function literal(value, params) {
-    return new exports.ZodMiniLiteral({
+    return new exports.ZodLiteral({
         type: "literal",
         values: Array.isArray(value) ? value : [value],
         ...index_js_1.util.normalizeParams(params),
     });
 }
-exports.ZodMiniFile = core.$constructor("ZodMiniFile", (inst, def) => {
+exports.ZodFile = core.$constructor("ZodFile", (inst, def) => {
     core.$ZodFile.init(inst, def);
-    exports.ZodMiniType.init(inst, def);
+    exports.ZodType.init(inst, def);
+    inst.min = (size, params) => inst.check(core._minSize(size, params));
+    inst.max = (size, params) => inst.check(core._maxSize(size, params));
+    inst.mime = (types, params) => inst.check(core._mime(Array.isArray(types) ? types : [types], params));
 });
 function file(params) {
-    return core._file(exports.ZodMiniFile, params);
+    return core._file(exports.ZodFile, params);
 }
-exports.ZodMiniTransform = core.$constructor("ZodMiniTransform", (inst, def) => {
+exports.ZodTransform = core.$constructor("ZodTransform", (inst, def) => {
     core.$ZodTransform.init(inst, def);
-    exports.ZodMiniType.init(inst, def);
+    exports.ZodType.init(inst, def);
+    inst._zod.parse = (payload, _ctx) => {
+        payload.addIssue = (issue) => {
+            if (typeof issue === "string") {
+                payload.issues.push(index_js_1.util.issue(issue, payload.value, def));
+            }
+            else {
+                // for Zod 3 backwards compatibility
+                const _issue = issue;
+                if (_issue.fatal)
+                    _issue.continue = false;
+                _issue.code ?? (_issue.code = "custom");
+                _issue.input ?? (_issue.input = payload.value);
+                _issue.inst ?? (_issue.inst = inst);
+                _issue.continue ?? (_issue.continue = true);
+                payload.issues.push(index_js_1.util.issue(_issue));
+            }
+        };
+        const output = def.transform(payload.value, payload);
+        if (output instanceof Promise) {
+            return output.then((output) => {
+                payload.value = output;
+                return payload;
+            });
+        }
+        payload.value = output;
+        return payload;
+    };
 });
 function transform(fn) {
-    return new exports.ZodMiniTransform({
+    return new exports.ZodTransform({
         type: "transform",
         transform: fn,
     });
 }
-exports.ZodMiniOptional = core.$constructor("ZodMiniOptional", (inst, def) => {
+exports.ZodOptional = core.$constructor("ZodOptional", (inst, def) => {
     core.$ZodOptional.init(inst, def);
-    exports.ZodMiniType.init(inst, def);
+    exports.ZodType.init(inst, def);
+    inst.unwrap = () => inst._zod.def.innerType;
 });
 function optional(innerType) {
-    return new exports.ZodMiniOptional({
+    return new exports.ZodOptional({
         type: "optional",
         innerType: innerType,
     });
 }
-exports.ZodMiniNullable = core.$constructor("ZodMiniNullable", (inst, def) => {
+exports.ZodNullable = core.$constructor("ZodNullable", (inst, def) => {
     core.$ZodNullable.init(inst, def);
-    exports.ZodMiniType.init(inst, def);
+    exports.ZodType.init(inst, def);
+    inst.unwrap = () => inst._zod.def.innerType;
 });
 function nullable(innerType) {
-    return new exports.ZodMiniNullable({
+    return new exports.ZodNullable({
         type: "nullable",
         innerType: innerType,
     });
@@ -670,12 +904,14 @@ function nullable(innerType) {
 function nullish(innerType) {
     return optional(nullable(innerType));
 }
-exports.ZodMiniDefault = core.$constructor("ZodMiniDefault", (inst, def) => {
+exports.ZodDefault = core.$constructor("ZodDefault", (inst, def) => {
     core.$ZodDefault.init(inst, def);
-    exports.ZodMiniType.init(inst, def);
+    exports.ZodType.init(inst, def);
+    inst.unwrap = () => inst._zod.def.innerType;
+    inst.removeDefault = inst.unwrap;
 });
 function _default(innerType, defaultValue) {
-    return new exports.ZodMiniDefault({
+    return new exports.ZodDefault({
         type: "default",
         innerType: innerType,
         get defaultValue() {
@@ -683,12 +919,13 @@ function _default(innerType, defaultValue) {
         },
     });
 }
-exports.ZodMiniPrefault = core.$constructor("ZodMiniPrefault", (inst, def) => {
+exports.ZodPrefault = core.$constructor("ZodPrefault", (inst, def) => {
     core.$ZodPrefault.init(inst, def);
-    exports.ZodMiniType.init(inst, def);
+    exports.ZodType.init(inst, def);
+    inst.unwrap = () => inst._zod.def.innerType;
 });
 function prefault(innerType, defaultValue) {
-    return new exports.ZodMiniPrefault({
+    return new exports.ZodPrefault({
         type: "prefault",
         innerType: innerType,
         get defaultValue() {
@@ -696,144 +933,177 @@ function prefault(innerType, defaultValue) {
         },
     });
 }
-exports.ZodMiniNonOptional = core.$constructor("ZodMiniNonOptional", (inst, def) => {
+exports.ZodNonOptional = core.$constructor("ZodNonOptional", (inst, def) => {
     core.$ZodNonOptional.init(inst, def);
-    exports.ZodMiniType.init(inst, def);
+    exports.ZodType.init(inst, def);
+    inst.unwrap = () => inst._zod.def.innerType;
 });
 function nonoptional(innerType, params) {
-    return new exports.ZodMiniNonOptional({
+    return new exports.ZodNonOptional({
         type: "nonoptional",
         innerType: innerType,
         ...index_js_1.util.normalizeParams(params),
     });
 }
-exports.ZodMiniSuccess = core.$constructor("ZodMiniSuccess", (inst, def) => {
+exports.ZodSuccess = core.$constructor("ZodSuccess", (inst, def) => {
     core.$ZodSuccess.init(inst, def);
-    exports.ZodMiniType.init(inst, def);
+    exports.ZodType.init(inst, def);
+    inst.unwrap = () => inst._zod.def.innerType;
 });
 function success(innerType) {
-    return new exports.ZodMiniSuccess({
+    return new exports.ZodSuccess({
         type: "success",
         innerType: innerType,
     });
 }
-exports.ZodMiniCatch = core.$constructor("ZodMiniCatch", (inst, def) => {
+exports.ZodCatch = core.$constructor("ZodCatch", (inst, def) => {
     core.$ZodCatch.init(inst, def);
-    exports.ZodMiniType.init(inst, def);
+    exports.ZodType.init(inst, def);
+    inst.unwrap = () => inst._zod.def.innerType;
+    inst.removeCatch = inst.unwrap;
 });
 function _catch(innerType, catchValue) {
-    return new exports.ZodMiniCatch({
+    return new exports.ZodCatch({
         type: "catch",
         innerType: innerType,
         catchValue: (typeof catchValue === "function" ? catchValue : () => catchValue),
     });
 }
-exports.ZodMiniNaN = core.$constructor("ZodMiniNaN", (inst, def) => {
+exports.ZodNaN = core.$constructor("ZodNaN", (inst, def) => {
     core.$ZodNaN.init(inst, def);
-    exports.ZodMiniType.init(inst, def);
+    exports.ZodType.init(inst, def);
 });
 function nan(params) {
-    return core._nan(exports.ZodMiniNaN, params);
+    return core._nan(exports.ZodNaN, params);
 }
-exports.ZodMiniPipe = core.$constructor("ZodMiniPipe", (inst, def) => {
+exports.ZodPipe = core.$constructor("ZodPipe", (inst, def) => {
     core.$ZodPipe.init(inst, def);
-    exports.ZodMiniType.init(inst, def);
+    exports.ZodType.init(inst, def);
+    inst.in = def.in;
+    inst.out = def.out;
 });
 function pipe(in_, out) {
-    return new exports.ZodMiniPipe({
+    return new exports.ZodPipe({
         type: "pipe",
         in: in_,
         out: out,
+        // ...util.normalizeParams(params),
     });
 }
-exports.ZodMiniReadonly = core.$constructor("ZodMiniReadonly", (inst, def) => {
+exports.ZodReadonly = core.$constructor("ZodReadonly", (inst, def) => {
     core.$ZodReadonly.init(inst, def);
-    exports.ZodMiniType.init(inst, def);
+    exports.ZodType.init(inst, def);
 });
 function readonly(innerType) {
-    return new exports.ZodMiniReadonly({
+    return new exports.ZodReadonly({
         type: "readonly",
         innerType: innerType,
     });
 }
-exports.ZodMiniTemplateLiteral = core.$constructor("ZodMiniTemplateLiteral", (inst, def) => {
+exports.ZodTemplateLiteral = core.$constructor("ZodTemplateLiteral", (inst, def) => {
     core.$ZodTemplateLiteral.init(inst, def);
-    exports.ZodMiniType.init(inst, def);
+    exports.ZodType.init(inst, def);
 });
 function templateLiteral(parts, params) {
-    return new exports.ZodMiniTemplateLiteral({
+    return new exports.ZodTemplateLiteral({
         type: "template_literal",
         parts,
         ...index_js_1.util.normalizeParams(params),
     });
 }
-exports.ZodMiniLazy = core.$constructor("ZodMiniLazy", (inst, def) => {
+exports.ZodLazy = core.$constructor("ZodLazy", (inst, def) => {
     core.$ZodLazy.init(inst, def);
-    exports.ZodMiniType.init(inst, def);
+    exports.ZodType.init(inst, def);
+    inst.unwrap = () => inst._zod.def.getter();
 });
-// export function lazy<T extends object>(getter: () => T): T {
-//   return util.createTransparentProxy<T>(getter);
-// }
-function _lazy(getter) {
-    return new exports.ZodMiniLazy({
+function lazy(getter) {
+    return new exports.ZodLazy({
         type: "lazy",
         getter: getter,
     });
 }
-exports.ZodMiniPromise = core.$constructor("ZodMiniPromise", (inst, def) => {
+exports.ZodPromise = core.$constructor("ZodPromise", (inst, def) => {
     core.$ZodPromise.init(inst, def);
-    exports.ZodMiniType.init(inst, def);
+    exports.ZodType.init(inst, def);
+    inst.unwrap = () => inst._zod.def.innerType;
 });
 function promise(innerType) {
-    return new exports.ZodMiniPromise({
+    return new exports.ZodPromise({
         type: "promise",
         innerType: innerType,
     });
 }
-exports.ZodMiniCustom = core.$constructor("ZodMiniCustom", (inst, def) => {
+exports.ZodCustom = core.$constructor("ZodCustom", (inst, def) => {
     core.$ZodCustom.init(inst, def);
-    exports.ZodMiniType.init(inst, def);
+    exports.ZodType.init(inst, def);
 });
 // custom checks
-function check(fn, params) {
+function check(fn) {
     const ch = new core.$ZodCheck({
         check: "custom",
-        ...index_js_1.util.normalizeParams(params),
+        // ...util.normalizeParams(params),
     });
     ch._zod.check = fn;
     return ch;
 }
-// ZodCustom
-// custom schema
 function custom(fn, _params) {
-    return core._custom(exports.ZodMiniCustom, fn ?? (() => true), _params);
+    return core._custom(exports.ZodCustom, fn ?? (() => true), _params);
 }
-// refine
 function refine(fn, _params = {}) {
-    return core._refine(exports.ZodMiniCustom, fn, _params);
+    return core._refine(exports.ZodCustom, fn, _params);
 }
-// instanceof
-class Class {
-    constructor(..._args) { }
+// superRefine
+function superRefine(fn) {
+    const ch = check((payload) => {
+        payload.addIssue = (issue) => {
+            if (typeof issue === "string") {
+                payload.issues.push(index_js_1.util.issue(issue, payload.value, ch._zod.def));
+            }
+            else {
+                // for Zod 3 backwards compatibility
+                const _issue = issue;
+                if (_issue.fatal)
+                    _issue.continue = false;
+                _issue.code ?? (_issue.code = "custom");
+                _issue.input ?? (_issue.input = payload.value);
+                _issue.inst ?? (_issue.inst = ch);
+                _issue.continue ?? (_issue.continue = !ch._zod.def.abort);
+                payload.issues.push(index_js_1.util.issue(_issue));
+            }
+        };
+        return fn(payload.value, payload);
+    });
+    return ch;
 }
 function _instanceof(cls, params = {
     error: `Input not instance of ${cls.name}`,
 }) {
-    const inst = custom((data) => data instanceof cls, params);
+    const inst = new exports.ZodCustom({
+        type: "custom",
+        check: "custom",
+        fn: (data) => data instanceof cls,
+        abort: true,
+        ...index_js_1.util.normalizeParams(params),
+    });
     inst._zod.bag.Class = cls;
     return inst;
 }
 // stringbool
 const stringbool = (...args) => core._stringbool({
-    Pipe: exports.ZodMiniPipe,
-    Boolean: exports.ZodMiniBoolean,
-    String: exports.ZodMiniString,
-    Transform: exports.ZodMiniTransform,
+    Pipe: exports.ZodPipe,
+    Boolean: exports.ZodBoolean,
+    String: exports.ZodString,
+    Transform: exports.ZodTransform,
 }, ...args);
 exports.stringbool = stringbool;
-function json() {
-    const jsonSchema = _lazy(() => {
-        return union([string(), number(), boolean(), _null(), array(jsonSchema), record(string(), jsonSchema)]);
+function json(params) {
+    const jsonSchema = lazy(() => {
+        return union([string(params), number(), boolean(), _null(), array(jsonSchema), record(string(), jsonSchema)]);
     });
     return jsonSchema;
+}
+// preprocess
+// /** @deprecated Use `z.pipe()` and `z.transform()` instead. */
+function preprocess(fn, schema) {
+    return pipe(transform(fn), schema);
 }

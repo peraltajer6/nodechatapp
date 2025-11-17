@@ -1,22 +1,22 @@
 import * as core from "../core/index.cjs";
 import * as schemas from "./schemas.cjs";
-export interface ZodMiniISODateTime extends schemas.ZodMiniStringFormat<"datetime"> {
+export interface ZodISODateTime extends schemas.ZodStringFormat {
     _zod: core.$ZodISODateTimeInternals;
 }
-export declare const ZodMiniISODateTime: core.$constructor<ZodMiniISODateTime>;
-export declare function datetime(params?: string | core.$ZodISODateTimeParams): ZodMiniISODateTime;
-export interface ZodMiniISODate extends schemas.ZodMiniStringFormat<"date"> {
+export declare const ZodISODateTime: core.$constructor<ZodISODateTime>;
+export declare function datetime(params?: string | core.$ZodISODateTimeParams): ZodISODateTime;
+export interface ZodISODate extends schemas.ZodStringFormat {
     _zod: core.$ZodISODateInternals;
 }
-export declare const ZodMiniISODate: core.$constructor<ZodMiniISODate>;
-export declare function date(params?: string | core.$ZodISODateParams): ZodMiniISODate;
-export interface ZodMiniISOTime extends schemas.ZodMiniStringFormat<"time"> {
+export declare const ZodISODate: core.$constructor<ZodISODate>;
+export declare function date(params?: string | core.$ZodISODateParams): ZodISODate;
+export interface ZodISOTime extends schemas.ZodStringFormat {
     _zod: core.$ZodISOTimeInternals;
 }
-export declare const ZodMiniISOTime: core.$constructor<ZodMiniISOTime>;
-export declare function time(params?: string | core.$ZodISOTimeParams): ZodMiniISOTime;
-export interface ZodMiniISODuration extends schemas.ZodMiniStringFormat<"duration"> {
+export declare const ZodISOTime: core.$constructor<ZodISOTime>;
+export declare function time(params?: string | core.$ZodISOTimeParams): ZodISOTime;
+export interface ZodISODuration extends schemas.ZodStringFormat {
     _zod: core.$ZodISODurationInternals;
 }
-export declare const ZodMiniISODuration: core.$constructor<ZodMiniISODuration>;
-export declare function duration(params?: string | core.$ZodISODurationParams): ZodMiniISODuration;
+export declare const ZodISODuration: core.$constructor<ZodISODuration>;
+export declare function duration(params?: string | core.$ZodISODurationParams): ZodISODuration;
