@@ -1,62 +1,90 @@
 import * as core from "../core/index.js";
 import * as schemas from "./schemas.js";
 
-// iso time
-export interface ZodMiniISODateTime extends schemas.ZodMiniStringFormat<"datetime"> {
+//////////////////////////////////////////////
+//////////////////////////////////////////////
+//////////                          //////////
+//////////      ZodISODateTime      //////////
+//////////                          //////////
+//////////////////////////////////////////////
+//////////////////////////////////////////////
+
+export interface ZodISODateTime extends schemas.ZodStringFormat {
   _zod: core.$ZodISODateTimeInternals;
 }
-export const ZodMiniISODateTime: core.$constructor<ZodMiniISODateTime> = /*@__PURE__*/ core.$constructor(
-  "$ZodISODateTime",
+export const ZodISODateTime: core.$constructor<ZodISODateTime> = /*@__PURE__*/ core.$constructor(
+  "ZodISODateTime",
   (inst, def) => {
     core.$ZodISODateTime.init(inst, def);
-    schemas.ZodMiniStringFormat.init(inst, def);
+    schemas.ZodStringFormat.init(inst, def);
   }
 );
-export function datetime(params?: string | core.$ZodISODateTimeParams): ZodMiniISODateTime {
-  return core._isoDateTime(ZodMiniISODateTime, params);
+
+export function datetime(params?: string | core.$ZodISODateTimeParams): ZodISODateTime {
+  return core._isoDateTime(ZodISODateTime, params);
 }
 
-// iso date
-export interface ZodMiniISODate extends schemas.ZodMiniStringFormat<"date"> {
+//////////////////////////////////////////
+//////////////////////////////////////////
+//////////                      //////////
+//////////      ZodISODate      //////////
+//////////                      //////////
+//////////////////////////////////////////
+//////////////////////////////////////////
+
+export interface ZodISODate extends schemas.ZodStringFormat {
   _zod: core.$ZodISODateInternals;
 }
-export const ZodMiniISODate: core.$constructor<ZodMiniISODate> = /*@__PURE__*/ core.$constructor(
-  "$ZodISODate",
-  (inst, def) => {
-    core.$ZodISODate.init(inst, def);
-    schemas.ZodMiniStringFormat.init(inst, def);
-  }
-);
-export function date(params?: string | core.$ZodISODateParams): ZodMiniISODate {
-  return core._isoDate(ZodMiniISODate, params);
+export const ZodISODate: core.$constructor<ZodISODate> = /*@__PURE__*/ core.$constructor("ZodISODate", (inst, def) => {
+  core.$ZodISODate.init(inst, def);
+  schemas.ZodStringFormat.init(inst, def);
+});
+
+export function date(params?: string | core.$ZodISODateParams): ZodISODate {
+  return core._isoDate(ZodISODate, params);
 }
 
-// iso time
-export interface ZodMiniISOTime extends schemas.ZodMiniStringFormat<"time"> {
+// ZodISOTime
+
+//////////////////////////////////////////
+//////////////////////////////////////////
+//////////                      //////////
+//////////      ZodISOTime      //////////
+//////////                      //////////
+//////////////////////////////////////////
+//////////////////////////////////////////
+
+export interface ZodISOTime extends schemas.ZodStringFormat {
   _zod: core.$ZodISOTimeInternals;
 }
-export const ZodMiniISOTime: core.$constructor<ZodMiniISOTime> = /*@__PURE__*/ core.$constructor(
-  "$ZodISOTime",
-  (inst, def) => {
-    core.$ZodISOTime.init(inst, def);
-    schemas.ZodMiniStringFormat.init(inst, def);
-  }
-);
-export function time(params?: string | core.$ZodISOTimeParams): ZodMiniISOTime {
-  return core._isoTime(ZodMiniISOTime, params);
+export const ZodISOTime: core.$constructor<ZodISOTime> = /*@__PURE__*/ core.$constructor("ZodISOTime", (inst, def) => {
+  core.$ZodISOTime.init(inst, def);
+  schemas.ZodStringFormat.init(inst, def);
+});
+
+export function time(params?: string | core.$ZodISOTimeParams): ZodISOTime {
+  return core._isoTime(ZodISOTime, params);
 }
 
-// iso duration
-export interface ZodMiniISODuration extends schemas.ZodMiniStringFormat<"duration"> {
+//////////////////////////////////////////////
+//////////////////////////////////////////////
+//////////                          //////////
+//////////      ZodISODuration      //////////
+//////////                          //////////
+//////////////////////////////////////////////
+//////////////////////////////////////////////
+
+export interface ZodISODuration extends schemas.ZodStringFormat {
   _zod: core.$ZodISODurationInternals;
 }
-export const ZodMiniISODuration: core.$constructor<ZodMiniISODuration> = /*@__PURE__*/ core.$constructor(
-  "$ZodISODuration",
+export const ZodISODuration: core.$constructor<ZodISODuration> = /*@__PURE__*/ core.$constructor(
+  "ZodISODuration",
   (inst, def) => {
     core.$ZodISODuration.init(inst, def);
-    schemas.ZodMiniStringFormat.init(inst, def);
+    schemas.ZodStringFormat.init(inst, def);
   }
 );
-export function duration(params?: string | core.$ZodISODurationParams): ZodMiniISODuration {
-  return core._isoDuration(ZodMiniISODuration, params);
+
+export function duration(params?: string | core.$ZodISODurationParams): ZodISODuration {
+  return core._isoDuration(ZodISODuration, params);
 }
