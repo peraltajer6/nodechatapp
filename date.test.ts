@@ -1,6 +1,7 @@
+// @ts-ignore TS6133
 import { expect, test } from "vitest";
 
-import * as z from "zod/v4";
+import * as z from "zod/v3";
 
 const beforeBenchmarkDate = new Date(2022, 10, 4);
 const benchmarkDate = new Date(2022, 10, 5);

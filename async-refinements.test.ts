@@ -1,36 +1,26 @@
+// @ts-ignore TS6133
 import { expect, test } from "vitest";
 
-import * as z from "zod/v4";
+import * as z from "zod/v3";
 
-test("async refine .parse()", async () => {
-  // throws ZodAsyncError
-  const s1 = z.string().refine(async (_val) => true);
-  expect(() => s1.safeParse("asdf")).toThrow();
+test("parse async test", async () => {
+  const schema1 = z.string().refine(async (_val) => false);
+  expect(() => schema1.parse("asdf")).toThrow();
+
+  const schema2 = z.string().refine((_val) => Promise.resolve(true));
+  return await expect(() => schema2.parse("asdf")).toThrow();
 });
 
-test("async refine", async () => {
-  const s1 = z.string().refine(async (_val) => true);
-  const r1 = await s1.parseAsync("asdf");
-  expect(r1).toEqual("asdf");
+test("parseAsync async test", async () => {
+  const schema1 = z.string().refine(async (_val) => true);
+  await schema1.parseAsync("asdf");
 
-  const s2 = z.string().refine(async (_val) => false);
-  const r2 = await s2.safeParseAsync("asdf");
-  expect(r2.success).toBe(false);
-  expect(r2).toMatchInlineSnapshot(`
-    {
-      "error": [ZodError: [
-      {
-        "code": "custom",
-        "path": [],
-        "message": "Invalid input"
-      }
-    ]],
-      "success": false,
-    }
-  `);
+  const schema2 = z.string().refine(async (_val) => false);
+  return await expect(schema2.parseAsync("asdf")).rejects.toBeDefined();
+  // expect(async () => await schema2.parseAsync('asdf')).toThrow();
 });
 
-test("async refine with Promises", async () => {
+test("parseAsync async test", async () => {
   // expect.assertions(2);
 
   const schema1 = z.string().refine((_val) => Promise.resolve(true));
@@ -45,24 +35,12 @@ test("async refine with Promises", async () => {
   return await expect(schema3.parseAsync("qwer")).resolves.toEqual("qwer");
 });
 
-test("async refine that uses value", async () => {
+test("parseAsync async with value", async () => {
   const schema1 = z.string().refine(async (val) => {
     return val.length > 5;
   });
+  await expect(schema1.parseAsync("asdf")).rejects.toBeDefined();
 
-  const r1 = await schema1.safeParseAsync("asdf");
-  expect(r1.success).toBe(false);
-  expect(r1.error).toMatchInlineSnapshot(`
-    [ZodError: [
-      {
-        "code": "custom",
-        "path": [],
-        "message": "Invalid input"
-      }
-    ]]
-  `);
-
-  const r2 = await schema1.safeParseAsync("asdf123");
-  expect(r2.success).toBe(true);
-  expect(r2.data).toEqual("asdf123");
+  const v = await schema1.parseAsync("asdf123");
+  return await expect(v).toEqual("asdf123");
 });

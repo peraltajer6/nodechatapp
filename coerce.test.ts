@@ -1,6 +1,7 @@
-import { expect, expectTypeOf, test } from "vitest";
+// @ts-ignore TS6133
+import { expect, test } from "vitest";
 
-import * as z from "zod/v4";
+import * as z from "zod/v3";
 
 test("string coercion", () => {
   const schema = z.coerce.string();
@@ -38,8 +39,8 @@ test("number coercion", () => {
   expect(schema.parse(3.14)).toEqual(3.14);
   expect(schema.parse(BigInt(15))).toEqual(15);
   expect(() => schema.parse(Number.NaN)).toThrow(); // z.ZodError
-  // expect(schema.parse(Number.POSITIVE_INFINITY)).toEqual(Number.POSITIVE_INFINITY);
-  // expect(schema.parse(Number.NEGATIVE_INFINITY)).toEqual(Number.NEGATIVE_INFINITY);
+  expect(schema.parse(Number.POSITIVE_INFINITY)).toEqual(Number.POSITIVE_INFINITY);
+  expect(schema.parse(Number.NEGATIVE_INFINITY)).toEqual(Number.NEGATIVE_INFINITY);
   expect(schema.parse(true)).toEqual(1);
   expect(schema.parse(false)).toEqual(0);
   expect(schema.parse(null)).toEqual(0);
@@ -129,32 +130,4 @@ test("date coercion", () => {
   expect(() => schema.parse(["item", "another_item"])).toThrow(); // z.ZodError
   expect(() => schema.parse([])).toThrow(); // z.ZodError
   expect(schema.parse(new Date())).toBeInstanceOf(Date);
-});
-
-// test("template literal coercion", () => {
-//   const schema = z.coerce
-//     .templateLiteral()
-//     .interpolated(z.number().finite())
-//     .interpolated(
-//       z.enum(["px", "em", "rem", "vh", "vw", "vmin", "vmax"]).optional()
-//     );
-//   expect(schema.parse(300)).toEqual("300");
-//   expect(schema.parse(BigInt(300))).toEqual("300");
-//   expect(schema.parse("300")).toEqual("300");
-//   expect(schema.parse("300px")).toEqual("300px");
-//   expect(schema.parse("300em")).toEqual("300em");
-//   expect(schema.parse("300rem")).toEqual("300rem");
-//   expect(schema.parse("300vh")).toEqual("300vh");
-//   expect(schema.parse("300vw")).toEqual("300vw");
-//   expect(schema.parse("300vmin")).toEqual("300vmin");
-//   expect(schema.parse("300vmax")).toEqual("300vmax");
-//   expect(schema.parse(["300px"])).toEqual("300px");
-// });
-
-test("override input type", () => {
-  const a = z.coerce.string<any>();
-  type input = z.input<typeof a>;
-  expectTypeOf<input>().toEqualTypeOf<any>();
-  type output = z.infer<typeof a>;
-  expectTypeOf<output>().toEqualTypeOf<string>();
 });

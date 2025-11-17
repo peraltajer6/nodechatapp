@@ -1,6 +1,7 @@
+// @ts-ignore TS6133
 import { expect, test } from "vitest";
 
-import * as z from "zod/v4";
+import * as z from "zod/v3";
 
 /// string
 const stringSchema = z.string();
@@ -199,7 +200,7 @@ test("union async parse", async () => {
 });
 
 /// record
-const recordSchema = z.record(z.string(), z.object({}));
+const recordSchema = z.record(z.object({}));
 test("record async parse", async () => {
   const goodData = { adsf: {}, asdf: {} };
   const badData = [{}];
@@ -214,19 +215,19 @@ test("record async parse", async () => {
 });
 
 /// function
-// const functionSchema = z.function();
-// test("function async parse", async () => {
-//   const goodData = () => {};
-//   const badData = "XXX";
+const functionSchema = z.function();
+test("function async parse", async () => {
+  const goodData = () => {};
+  const badData = "XXX";
 
-//   const goodResult = await functionSchema.safeParseAsync(goodData);
-//   expect(goodResult.success).toBe(true);
-//   if (goodResult.success) expect(typeof goodResult.data).toEqual("function");
+  const goodResult = await functionSchema.safeParseAsync(goodData);
+  expect(goodResult.success).toBe(true);
+  if (goodResult.success) expect(typeof goodResult.data).toEqual("function");
 
-//   const badResult = await functionSchema.safeParseAsync(badData);
-//   expect(badResult.success).toBe(false);
-//   if (!badResult.success) expect(badResult.error).toBeInstanceOf(z.ZodError);
-// });
+  const badResult = await functionSchema.safeParseAsync(badData);
+  expect(badResult.success).toBe(false);
+  if (!badResult.success) expect(badResult.error).toBeInstanceOf(z.ZodError);
+});
 
 /// literal
 const literalSchema = z.literal("asdf");
@@ -284,15 +285,26 @@ test("promise async parse good", async () => {
 
   const goodResult = await promiseSchema.safeParseAsync(goodData);
   expect(goodResult.success).toBe(true);
-  expect(typeof goodResult.data).toEqual("number");
-  expect(goodResult.data).toEqual(123);
+  if (goodResult.success) {
+    expect(goodResult.data).toBeInstanceOf(Promise);
+    const data = await goodResult.data;
+    expect(data).toEqual(123);
+    // expect(goodResult.data).resolves.toEqual(124);
+    // return goodResult.data;
+  } else {
+    throw new Error("success should be true");
+  }
 });
 
 test("promise async parse bad", async () => {
   const badData = Promise.resolve("XXX");
   const badResult = await promiseSchema.safeParseAsync(badData);
-  expect(badResult.success).toBe(false);
-  expect(badResult.error).toBeInstanceOf(z.ZodError);
+  expect(badResult.success).toBe(true);
+  if (badResult.success) {
+    await expect(badResult.data).rejects.toBeInstanceOf(z.ZodError);
+  } else {
+    throw new Error("success should be true");
+  }
 });
 
 test("async validation non-empty strings", async () => {
@@ -307,7 +319,7 @@ test("async validation non-empty strings", async () => {
 
   const r1 = result1;
   await result2.then((r2) => {
-    expect(r1.error!.issues.length).toBe(r2.error!.issues.length);
+    if (r1.success === false && r2.success === false) expect(r1.error.issues.length).toBe(r2.error.issues.length); // <--- r1 has length 2, r2 has length 1
   });
 });
 
@@ -321,8 +333,9 @@ test("async validation multiple errors 1", async () => {
   const result1 = base.safeParse(testval);
   const result2 = base.safeParseAsync(testval);
 
-  await result2.then((result2) => {
-    expect(result2.error!.issues.length).toBe(result1.error!.issues.length);
+  const r1 = result1;
+  await result2.then((r2) => {
+    if (r1.success === false && r2.success === false) expect(r2.error.issues.length).toBe(r1.error.issues.length);
   });
 });
 
@@ -331,14 +344,7 @@ test("async validation multiple errors 2", async () => {
     z.object({
       hello: z.string(),
       foo: z.object({
-        bar: z.number().refine(
-          is_async
-            ? async () =>
-                new Promise((resolve) => {
-                  setTimeout(() => resolve(false), 500);
-                })
-            : () => false
-        ),
+        bar: z.number().refine(is_async ? async () => false : () => false),
       }),
     });
 
@@ -346,8 +352,9 @@ test("async validation multiple errors 2", async () => {
   const result1 = base().safeParse(testval);
   const result2 = base(true).safeParseAsync(testval);
 
-  await result2.then((result2) => {
-    expect(result1.error!.issues.length).toBe(result2.error!.issues.length);
+  const r1 = result1;
+  await result2.then((r2) => {
+    if (r1.success === false && r2.success === false) expect(r2.error.issues.length).toBe(r1.error.issues.length);
   });
 });
 

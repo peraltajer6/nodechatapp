@@ -1,22 +1,27 @@
 import * as core from "../core/index.js";
 import * as schemas from "./schemas.js";
 
-export function string<T = unknown>(params?: string | core.$ZodStringParams): schemas.ZodMiniString<T> {
-  return core._coercedString(schemas.ZodMiniString, params) as schemas.ZodMiniString<T>;
+export interface ZodCoercedString<T = unknown> extends schemas._ZodString<core.$ZodStringInternals<T>> {}
+export function string<T = unknown>(params?: string | core.$ZodStringParams): ZodCoercedString<T> {
+  return core._coercedString(schemas.ZodString, params) as any;
 }
 
-export function number<T = unknown>(params?: string | core.$ZodNumberParams): schemas.ZodMiniNumber<T> {
-  return core._coercedNumber(schemas.ZodMiniNumber, params) as schemas.ZodMiniNumber<T>;
+export interface ZodCoercedNumber<T = unknown> extends schemas._ZodNumber<core.$ZodNumberInternals<T>> {}
+export function number<T = unknown>(params?: string | core.$ZodNumberParams): ZodCoercedNumber<T> {
+  return core._coercedNumber(schemas.ZodNumber, params) as ZodCoercedNumber<T>;
 }
 
-export function boolean<T = unknown>(params?: string | core.$ZodBooleanParams): schemas.ZodMiniBoolean<T> {
-  return core._coercedBoolean(schemas.ZodMiniBoolean, params) as schemas.ZodMiniBoolean<T>;
+export interface ZodCoercedBoolean<T = unknown> extends schemas._ZodBoolean<core.$ZodBooleanInternals<T>> {}
+export function boolean<T = unknown>(params?: string | core.$ZodBooleanParams): ZodCoercedBoolean<T> {
+  return core._coercedBoolean(schemas.ZodBoolean, params) as ZodCoercedBoolean<T>;
 }
 
-export function bigint<T = unknown>(params?: string | core.$ZodBigIntParams): schemas.ZodMiniBigInt<T> {
-  return core._coercedBigint(schemas.ZodMiniBigInt, params) as schemas.ZodMiniBigInt<T>;
+export interface ZodCoercedBigInt<T = unknown> extends schemas._ZodBigInt<core.$ZodBigIntInternals<T>> {}
+export function bigint<T = unknown>(params?: string | core.$ZodBigIntParams): ZodCoercedBigInt<T> {
+  return core._coercedBigint(schemas.ZodBigInt, params) as ZodCoercedBigInt<T>;
 }
 
-export function date<T = unknown>(params?: string | core.$ZodDateParams): schemas.ZodMiniDate<T> {
-  return core._coercedDate(schemas.ZodMiniDate, params) as schemas.ZodMiniDate<T>;
+export interface ZodCoercedDate<T = unknown> extends schemas._ZodDate<core.$ZodDateInternals<T>> {}
+export function date<T = unknown>(params?: string | core.$ZodDateParams): ZodCoercedDate<T> {
+  return core._coercedDate(schemas.ZodDate, params) as ZodCoercedDate<T>;
 }

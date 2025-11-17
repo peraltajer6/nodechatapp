@@ -1,13 +1,13 @@
-import { expect, expectTypeOf, test } from "vitest";
+// @ts-ignore TS6133
+import { expect, test } from "vitest";
 
-import * as z from "zod/v4";
+import * as z from "zod/v3";
 
 const schema = z.nan();
 
 test("passing validations", () => {
   schema.parse(Number.NaN);
   schema.parse(Number("Not a number"));
-  expectTypeOf<typeof schema._output>().toEqualTypeOf<number>();
 });
 
 test("failing validations", () => {

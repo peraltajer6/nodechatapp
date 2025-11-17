@@ -1,220 +1,132 @@
-import { expect, expectTypeOf, test } from "vitest";
-import * as z from "zod/v4";
+// @ts-ignore TS6133
+import { expect, test } from "vitest";
+
+import * as z from "zod/v3";
+import { util } from "../helpers/util.js";
+
+const booleanRecord = z.record(z.boolean());
+type booleanRecord = z.infer<typeof booleanRecord>;
+
+const recordWithEnumKeys = z.record(z.enum(["Tuna", "Salmon"]), z.string());
+type recordWithEnumKeys = z.infer<typeof recordWithEnumKeys>;
+
+const recordWithLiteralKeys = z.record(z.union([z.literal("Tuna"), z.literal("Salmon")]), z.string());
+type recordWithLiteralKeys = z.infer<typeof recordWithLiteralKeys>;
 
 test("type inference", () => {
-  const booleanRecord = z.record(z.string(), z.boolean());
-  type booleanRecord = typeof booleanRecord._output;
+  util.assertEqual<booleanRecord, Record<string, boolean>>(true);
 
-  const recordWithEnumKeys = z.record(z.enum(["Tuna", "Salmon"]), z.string());
-  type recordWithEnumKeys = z.infer<typeof recordWithEnumKeys>;
+  util.assertEqual<recordWithEnumKeys, Partial<Record<"Tuna" | "Salmon", string>>>(true);
 
-  const recordWithLiteralKey = z.record(z.literal(["Tuna", "Salmon"]), z.string());
-  type recordWithLiteralKey = z.infer<typeof recordWithLiteralKey>;
-
-  const recordWithLiteralUnionKeys = z.record(z.union([z.literal("Tuna"), z.literal("Salmon")]), z.string());
-  type recordWithLiteralUnionKeys = z.infer<typeof recordWithLiteralUnionKeys>;
-
-  expectTypeOf<booleanRecord>().toEqualTypeOf<Record<string, boolean>>();
-  expectTypeOf<recordWithEnumKeys>().toEqualTypeOf<Record<"Tuna" | "Salmon", string>>();
-  expectTypeOf<recordWithLiteralKey>().toEqualTypeOf<Record<"Tuna" | "Salmon", string>>();
-  expectTypeOf<recordWithLiteralUnionKeys>().toEqualTypeOf<Record<"Tuna" | "Salmon", string>>();
+  util.assertEqual<recordWithLiteralKeys, Partial<Record<"Tuna" | "Salmon", string>>>(true);
 });
 
-test("enum exhaustiveness", () => {
-  const schema = z.record(z.enum(["Tuna", "Salmon"]), z.string());
-  expect(
-    schema.parse({
-      Tuna: "asdf",
-      Salmon: "asdf",
-    })
-  ).toEqual({
-    Tuna: "asdf",
-    Salmon: "asdf",
-  });
-
-  expect(schema.safeParse({ Tuna: "asdf", Salmon: "asdf", Trout: "asdf" })).toMatchInlineSnapshot(`
-    {
-      "error": [ZodError: [
-      {
-        "code": "unrecognized_keys",
-        "keys": [
-          "Trout"
-        ],
-        "path": [],
-        "message": "Unrecognized key: \\"Trout\\""
-      }
-    ]],
-      "success": false,
-    }
-  `);
-  expect(schema.safeParse({ Tuna: "asdf" })).toMatchInlineSnapshot(`
-    {
-      "error": [ZodError: [
-      {
-        "expected": "string",
-        "code": "invalid_type",
-        "path": [
-          "Salmon"
-        ],
-        "message": "Invalid input: expected string, received undefined"
-      }
-    ]],
-      "success": false,
-    }
-  `);
-});
-
-test("literal exhaustiveness", () => {
-  const schema = z.record(z.literal(["Tuna", "Salmon"]), z.string());
-  schema.parse({
-    Tuna: "asdf",
-    Salmon: "asdf",
-  });
-
-  expect(schema.safeParse({ Tuna: "asdf", Salmon: "asdf", Trout: "asdf" })).toMatchInlineSnapshot(`
-    {
-      "error": [ZodError: [
-      {
-        "code": "unrecognized_keys",
-        "keys": [
-          "Trout"
-        ],
-        "path": [],
-        "message": "Unrecognized key: \\"Trout\\""
-      }
-    ]],
-      "success": false,
-    }
-  `);
-  expect(schema.safeParse({ Tuna: "asdf" })).toMatchInlineSnapshot(`
-    {
-      "error": [ZodError: [
-      {
-        "expected": "string",
-        "code": "invalid_type",
-        "path": [
-          "Salmon"
-        ],
-        "message": "Invalid input: expected string, received undefined"
-      }
-    ]],
-      "success": false,
-    }
-  `);
-});
-
-test("pipe exhaustiveness", () => {
-  const schema = z.record(z.enum(["Tuna", "Salmon"]).pipe(z.any()), z.string());
-  expect(schema.parse({ Tuna: "asdf", Salmon: "asdf" })).toEqual({
-    Tuna: "asdf",
-    Salmon: "asdf",
-  });
-
-  expect(schema.safeParse({ Tuna: "asdf", Salmon: "asdf", Trout: "asdf" })).toMatchInlineSnapshot(`
-    {
-      "error": [ZodError: [
-      {
-        "code": "unrecognized_keys",
-        "keys": [
-          "Trout"
-        ],
-        "path": [],
-        "message": "Unrecognized key: \\"Trout\\""
-      }
-    ]],
-      "success": false,
-    }
-  `);
-  expect(schema.safeParse({ Tuna: "asdf" })).toMatchInlineSnapshot(`
-    {
-      "error": [ZodError: [
-      {
-        "expected": "string",
-        "code": "invalid_type",
-        "path": [
-          "Salmon"
-        ],
-        "message": "Invalid input: expected string, received undefined"
-      }
-    ]],
-      "success": false,
-    }
-  `);
-});
-
-test("union exhaustiveness", () => {
-  const schema = z.record(z.union([z.literal("Tuna"), z.literal("Salmon")]), z.string());
-  expect(schema.parse({ Tuna: "asdf", Salmon: "asdf" })).toEqual({
-    Tuna: "asdf",
-    Salmon: "asdf",
-  });
-
-  expect(schema.safeParse({ Tuna: "asdf", Salmon: "asdf", Trout: "asdf" })).toMatchInlineSnapshot(`
-    {
-      "error": [ZodError: [
-      {
-        "code": "unrecognized_keys",
-        "keys": [
-          "Trout"
-        ],
-        "path": [],
-        "message": "Unrecognized key: \\"Trout\\""
-      }
-    ]],
-      "success": false,
-    }
-  `);
-  expect(schema.safeParse({ Tuna: "asdf" })).toMatchInlineSnapshot(`
-    {
-      "error": [ZodError: [
-      {
-        "expected": "string",
-        "code": "invalid_type",
-        "path": [
-          "Salmon"
-        ],
-        "message": "Invalid input: expected string, received undefined"
-      }
-    ]],
-      "success": false,
-    }
-  `);
+test("methods", () => {
+  booleanRecord.optional();
+  booleanRecord.nullable();
 });
 
 test("string record parse - pass", () => {
-  const schema = z.record(z.string(), z.boolean());
-  schema.parse({
+  booleanRecord.parse({
     k1: true,
     k2: false,
     1234: false,
   });
-
-  expect(schema.safeParse({ asdf: 1234 }).success).toEqual(false);
-  expect(schema.safeParse("asdf")).toMatchInlineSnapshot(`
-    {
-      "error": [ZodError: [
-      {
-        "expected": "record",
-        "code": "invalid_type",
-        "path": [],
-        "message": "Invalid input: expected record, received string"
-      }
-    ]],
-      "success": false,
-    }
-  `);
 });
+
+test("string record parse - fail", () => {
+  const badCheck = () =>
+    booleanRecord.parse({
+      asdf: 1234,
+    } as any);
+  expect(badCheck).toThrow();
+
+  expect(() => booleanRecord.parse("asdf")).toThrow();
+});
+
+test("string record parse - fail", () => {
+  const badCheck = () =>
+    booleanRecord.parse({
+      asdf: {},
+    } as any);
+  expect(badCheck).toThrow();
+});
+
+test("string record parse - fail", () => {
+  const badCheck = () =>
+    booleanRecord.parse({
+      asdf: [],
+    } as any);
+  expect(badCheck).toThrow();
+});
+
+test("key schema", () => {
+  const result1 = recordWithEnumKeys.parse({
+    Tuna: "asdf",
+    Salmon: "asdf",
+  });
+  expect(result1).toEqual({
+    Tuna: "asdf",
+    Salmon: "asdf",
+  });
+
+  const result2 = recordWithLiteralKeys.parse({
+    Tuna: "asdf",
+    Salmon: "asdf",
+  });
+  expect(result2).toEqual({
+    Tuna: "asdf",
+    Salmon: "asdf",
+  });
+
+  // shouldn't require us to specify all props in record
+  const result3 = recordWithEnumKeys.parse({
+    Tuna: "abcd",
+  });
+  expect(result3).toEqual({
+    Tuna: "abcd",
+  });
+
+  // shouldn't require us to specify all props in record
+  const result4 = recordWithLiteralKeys.parse({
+    Salmon: "abcd",
+  });
+  expect(result4).toEqual({
+    Salmon: "abcd",
+  });
+
+  expect(() =>
+    recordWithEnumKeys.parse({
+      Tuna: "asdf",
+      Salmon: "asdf",
+      Trout: "asdf",
+    })
+  ).toThrow();
+
+  expect(() =>
+    recordWithLiteralKeys.parse({
+      Tuna: "asdf",
+      Salmon: "asdf",
+
+      Trout: "asdf",
+    })
+  ).toThrow();
+});
+
+// test("record element", () => {
+//   expect(booleanRecord.element).toBeInstanceOf(z.ZodBoolean);
+// });
 
 test("key and value getters", () => {
   const rec = z.record(z.string(), z.number());
 
-  rec.keyType.parse("asdf");
-  rec.valueType.parse(1234);
+  rec.keySchema.parse("asdf");
+  rec.valueSchema.parse(1234);
+  rec.element.parse(1234);
 });
 
 test("is not vulnerable to prototype pollution", async () => {
   const rec = z.record(
-    z.string(),
     z.object({
       a: z.string(),
     })
@@ -250,93 +162,10 @@ test("is not vulnerable to prototype pollution", async () => {
   }
 });
 
-test("dont remove undefined values", () => {
-  const result1 = z.record(z.string(), z.any()).parse({ foo: undefined });
+test("dont parse undefined values", () => {
+  const result1 = z.record(z.any()).parse({ foo: undefined });
 
   expect(result1).toEqual({
     foo: undefined,
   });
-});
-
-test("allow undefined values", () => {
-  const schema = z.record(z.string(), z.undefined());
-
-  expect(
-    Object.keys(
-      schema.parse({
-        _test: undefined,
-      })
-    )
-  ).toEqual(["_test"]);
-});
-
-test("async parsing", async () => {
-  const schema = z
-    .record(
-      z.string(),
-      z
-        .string()
-        .optional()
-        .refine(async () => true)
-    )
-    .refine(async () => true);
-
-  const data = {
-    foo: "bar",
-    baz: "qux",
-  };
-  const result = await schema.safeParseAsync(data);
-  expect(result.data).toEqual(data);
-});
-
-test("async parsing", async () => {
-  const schema = z
-    .record(
-      z.string(),
-      z
-        .string()
-        .optional()
-        .refine(async () => false)
-    )
-    .refine(async () => false);
-
-  const data = {
-    foo: "bar",
-    baz: "qux",
-  };
-  const result = await schema.safeParseAsync(data);
-  expect(result.success).toEqual(false);
-  expect(result.error).toMatchInlineSnapshot(`
-    [ZodError: [
-      {
-        "code": "custom",
-        "path": [
-          "foo"
-        ],
-        "message": "Invalid input"
-      },
-      {
-        "code": "custom",
-        "path": [
-          "baz"
-        ],
-        "message": "Invalid input"
-      },
-      {
-        "code": "custom",
-        "path": [],
-        "message": "Invalid input"
-      }
-    ]]
-  `);
-});
-
-test("partial record", () => {
-  const schema = z.partialRecord(z.string(), z.string());
-  type schema = z.infer<typeof schema>;
-  expectTypeOf<schema>().toEqualTypeOf<Partial<Record<string, string>>>();
-
-  const Keys = z.enum(["id", "name", "email"]).or(z.never());
-  const Person = z.partialRecord(Keys, z.string());
-  expectTypeOf<z.infer<typeof Person>>().toEqualTypeOf<Partial<Record<"id" | "name" | "email", string>>>();
 });

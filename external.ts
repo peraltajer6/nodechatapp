@@ -1,17 +1,25 @@
 export * as core from "../core/index.js";
-export * from "./parse.js";
 export * from "./schemas.js";
 export * from "./checks.js";
+export * from "./errors.js";
+export * from "./parse.js";
+export * from "./compat.js";
+
+// zod-specified
+import { config } from "../core/index.js";
+import en from "../locales/en.js";
+config(en());
 
 export type { infer, output, input } from "../core/index.js";
 export {
   globalRegistry,
+  type GlobalMeta,
   registry,
   config,
+  function,
   $output,
   $input,
   $brand,
-  function,
   clone,
   regexes,
   treeifyError,
@@ -24,17 +32,19 @@ export {
 } from "../core/index.js";
 
 export * as locales from "../locales/index.js";
-/** A special constant with type `never` */
-// export const NEVER = {} as never;
 
 // iso
+// must be exported from top-level
+// https://github.com/colinhacks/zod/issues/4491
+export { ZodISODateTime, ZodISODate, ZodISOTime, ZodISODuration } from "./iso.js";
 export * as iso from "./iso.js";
-export {
-  ZodMiniISODateTime,
-  ZodMiniISODate,
-  ZodMiniISOTime,
-  ZodMiniISODuration,
-} from "./iso.js";
 
 // coerce
+export type {
+  ZodCoercedString,
+  ZodCoercedNumber,
+  ZodCoercedBigInt,
+  ZodCoercedBoolean,
+  ZodCoercedDate,
+} from "./coerce.js";
 export * as coerce from "./coerce.js";
