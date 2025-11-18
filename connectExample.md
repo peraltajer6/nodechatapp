@@ -15,9 +15,9 @@ The 'connect' command can be used via the SocksClient.createConnection() factory
 Since SocksClient.createConnection returns a Promise, we can easily use async/await for flow control.
 
 ```typescript
-const SocksClient = require('socks').SocksClient;
+import { SocksClient, SocksClientOptions } from 'socks';
 
-const options  = {
+const options: SocksClientOptions = {
   proxy: {
     host: '104.131.124.203',
     port: 1081,
@@ -66,6 +66,7 @@ async function start() {
           "zip":"07014"
         }
       */
+    });
   } catch (err) {
     // Handle errors
   }
@@ -77,9 +78,9 @@ start();
 ### Using createConnection with Promises
 
 ```typescript
-const SocksClient = require('socks').SocksClient;
+import { SocksClient, SocksClientOptions } from 'socks';
 
-const options  = {
+const options: SocksClientOptions = {
   proxy: {
     ipaddress: '104.131.124.203',
     port: 1081,
@@ -126,6 +127,7 @@ SocksClient.createConnection(options)
         "zip":"07014"
       }
     */
+  });
 })
 .catch(err => {
   // handle errors
@@ -139,9 +141,9 @@ SocksClient.createConnection() optionally accepts a callback function as a secon
 **Note:** If a callback function is provided, a Promise is still returned from the function, but the promise will always resolve regardless of if there was en error. (tldr: Do not mix callbacks and Promises).
 
 ```typescript
-const SocksClient = require('socks').SocksClient;
+import { SocksClient, SocksClientOptions } from 'socks';
 
-const options  = {
+const options: SocksClientOptions = {
   proxy: {
     ipaddress: '104.131.124.203',
     port: 1081,
@@ -190,6 +192,7 @@ SocksClient.createConnection(options, (err, info) => {
           "zip":"07014"
         }
       */
+    });
   }
 })
 ```
@@ -199,9 +202,9 @@ SocksClient.createConnection(options, (err, info) => {
 SocksClient also supports instance creation of a SocksClient. This allows for event based flow control.
 
 ```typescript
-const SocksClient = require('socks').SocksClient;
+import { SocksClient, SocksClientOptions } from 'socks';
 
-const options  = {
+const options: SocksClientOptions = {
   proxy: {
     ipaddress: '104.131.124.203',
     port: 1081,
@@ -249,10 +252,14 @@ client.on('established', (info) => {
         "zip":"07014"
       }
     */
+  });
 });
 
 // Failed to establish proxy connection to destination.
 client.on('error', () => {
   // Handle errors
 });
+
+// Start connection
+client.connect();
 ```

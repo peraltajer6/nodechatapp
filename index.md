@@ -1,17 +1,5 @@
-# socks examples
+# Documentation
 
-## TypeScript Examples
+- [API Reference](https://github.com/JoshGlazebrook/socks#api-reference)
 
-[Connect command](typescript/connectExample.md)
-
-[Bind command](typescript/bindExample.md)
-
-[Associate command](typescript/associateExample.md)
-
-## JavaScript Examples
-
-[Connect command](javascript/connectExample.md)
-
-[Bind command](javascript/bindExample.md)
-
-[Associate command](javascript/associateExample.md)
+- [Code Examples](./examples/index.md)
