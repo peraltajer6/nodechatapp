@@ -1,301 +1,356 @@
-# Change Log
+# Changelog
 
-## 0.5.6
+## [0.3.8](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/compare/webdriver-bidi-protocol-v0.3.7...webdriver-bidi-protocol-v0.3.8) (2025-10-12)
 
-* Fix for regression when people were using numbers as names in source maps. See
-  #236.
 
-## 0.5.5
+### Bug Fixes
 
-* Fix "regression" of unsupported, implementation behavior that half the world
-  happens to have come to depend on. See #235.
+* re-generate types based on specifciation updates ([#278](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/278)) ([e4eea99](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/e4eea99d53be065c0f16b676570ca49c5c89766f))
 
-* Fix regression involving function hoisting in SpiderMonkey. See #233.
+## [0.3.7](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/compare/webdriver-bidi-protocol-v0.3.6...webdriver-bidi-protocol-v0.3.7) (2025-10-07)
 
-## 0.5.4
 
-* Large performance improvements to source-map serialization. See #228 and #229.
+### Bug Fixes
 
-## 0.5.3
+* only include relevant files ([#274](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/274)) ([f7480d3](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/f7480d33987f158a2eb566e8072646b265f473f2))
+* re-generate types based on specifciation updates ([#273](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/273)) ([a9e97d1](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/a9e97d11381f6145e3a2dfa1689b0a4548e018d0))
 
-* Do not include unnecessary distribution files. See
-  commit ef7006f8d1647e0a83fdc60f04f5a7ca54886f86.
+## [0.3.6](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/compare/webdriver-bidi-protocol-v0.3.5...webdriver-bidi-protocol-v0.3.6) (2025-09-26)
 
-## 0.5.2
 
-* Include browser distributions of the library in package.json's `files`. See
-  issue #212.
+### Bug Fixes
 
-## 0.5.1
+* re-generate types based on specifciation updates ([#267](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/267)) ([de75a21](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/de75a21694be7d7d5fd5a9afd7081b96080d361a))
 
-* Fix latent bugs in IndexedSourceMapConsumer.prototype._parseMappings. See
-  ff05274becc9e6e1295ed60f3ea090d31d843379.
+## [0.3.5](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/compare/webdriver-bidi-protocol-v0.3.4...webdriver-bidi-protocol-v0.3.5) (2025-09-25)
 
-## 0.5.0
 
-* Node 0.8 is no longer supported.
+### Bug Fixes
 
-* Use webpack instead of dryice for bundling.
+* rename mapping back to Commands ([#264](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/264)) ([a7b19c3](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/a7b19c3b173f268beef870449bfad714952dd478))
 
-* Big speedups serializing source maps. See pull request #203.
+## [0.3.4](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/compare/webdriver-bidi-protocol-v0.3.3...webdriver-bidi-protocol-v0.3.4) (2025-09-25)
 
-* Fix a bug with `SourceMapConsumer.prototype.sourceContentFor` and sources that
-  explicitly start with the source root. See issue #199.
 
-## 0.4.4
+### Bug Fixes
 
-* Fix an issue where using a `SourceMapGenerator` after having created a
-  `SourceMapConsumer` from it via `SourceMapConsumer.fromSourceMap` failed. See
-  issue #191.
+* generation should not emit ts imports ([#262](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/262)) ([74bf1ad](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/74bf1adb89582b073fa8741ddf3680549dada469))
 
-* Fix an issue with where `SourceMapGenerator` would mistakenly consider
-  different mappings as duplicates of each other and avoid generating them. See
-  issue #192.
+## [0.3.3](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/compare/webdriver-bidi-protocol-v0.3.2...webdriver-bidi-protocol-v0.3.3) (2025-09-25)
 
-## 0.4.3
 
-* A very large number of performance improvements, particularly when parsing
-  source maps. Collectively about 75% of time shaved off of the source map
-  parsing benchmark!
+### Bug Fixes
 
-* Fix a bug in `SourceMapConsumer.prototype.allGeneratedPositionsFor` and fuzzy
-  searching in the presence of a column option. See issue #177.
+* correctly re-export mapping ([#259](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/259)) ([dc18802](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/dc188026fc8869c6ac73297dea1681ea509656a0))
+* re-generate types based on specifciation updates ([#261](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/261)) ([0c0ea74](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/0c0ea744335453d18e459522b094de6be616f4ff))
 
-* Fix a bug with joining a source and its source root when the source is above
-  the root. See issue #182.
+## [0.3.2](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/compare/webdriver-bidi-protocol-v0.3.1...webdriver-bidi-protocol-v0.3.2) (2025-09-24)
 
-* Add the `SourceMapConsumer.prototype.hasContentsOfAllSources` method to
-  determine when all sources' contents are inlined into the source map. See
-  issue #190.
 
-## 0.4.2
+### Bug Fixes
 
-* Add an `.npmignore` file so that the benchmarks aren't pulled down by
-  dependent projects. Issue #169.
+* re-generate types based on specifciation updates ([#257](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/257)) ([d5a2c22](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/d5a2c22c5623f914ad309fc78f58bf90e610e816))
 
-* Add an optional `column` argument to
-  `SourceMapConsumer.prototype.allGeneratedPositionsFor` and better handle lines
-  with no mappings. Issues #172 and #173.
+## [0.3.1](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/compare/webdriver-bidi-protocol-v0.3.0...webdriver-bidi-protocol-v0.3.1) (2025-09-23)
 
-## 0.4.1
 
-* Fix accidentally defining a global variable. #170.
+### Bug Fixes
 
-## 0.4.0
+* generation of mapping ([#251](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/251)) ([6c52528](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/6c52528e916d47188659904c67fca20c752f714f))
+* re-generate types based on specifciation updates ([#249](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/249)) ([d625fd2](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/d625fd2e173294e9a80bd3e90572b85c168c3137))
+* re-generate types based on specifciation updates ([#252](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/252)) ([d045d7b](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/d045d7bef06acd6a7df6508ec90f3a178b95070a))
 
-* The default direction for fuzzy searching was changed back to its original
-  direction. See #164.
+## [0.3.0](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/compare/webdriver-bidi-protocol-v0.2.11...webdriver-bidi-protocol-v0.3.0) (2025-09-15)
 
-* There is now a `bias` option you can supply to `SourceMapConsumer` to control
-  the fuzzy searching direction. See #167.
 
-* About an 8% speed up in parsing source maps. See #159.
+### Features
 
-* Added a benchmark for parsing and generating source maps.
+* automatically generate command mapped types ([#243](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/243)) ([3eb25f3](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/3eb25f35e1a17885c1af7a63037de1fc74c83d05))
 
-## 0.3.0
 
-* Change the default direction that searching for positions fuzzes when there is
-  not an exact match. See #154.
+### Bug Fixes
 
-* Support for environments using json2.js for JSON serialization. See #156.
+* re-generate types based on specifciation updates ([#245](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/245)) ([c32b70d](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/c32b70de5fb4dda145c872025192f5cd59177c34))
 
-## 0.2.0
+## [0.2.11](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/compare/webdriver-bidi-protocol-v0.2.10...webdriver-bidi-protocol-v0.2.11) (2025-09-10)
 
-* Support for consuming "indexed" source maps which do not have any remote
-  sections. See pull request #127. This introduces a minor backwards
-  incompatibility if you are monkey patching `SourceMapConsumer.prototype`
-  methods.
 
-## 0.1.43
+### Bug Fixes
 
-* Performance improvements for `SourceMapGenerator` and `SourceNode`. See issue
-  #148 for some discussion and issues #150, #151, and #152 for implementations.
+* add user agent override to the mapping ([#240](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/240)) ([0336e7f](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/0336e7faa0988ac4b0582a86345e5644ee8132bb))
+* re-generate types based on specifciation updates ([#239](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/239)) ([2e52f5a](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/2e52f5ae40367410699d3a9820ad8856e7485712))
+* re-generate types based on specifciation updates ([#242](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/242)) ([8ae63cc](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/8ae63cc2032ac3889b261d78c57b6b5cce412cad))
 
-## 0.1.42
+## [0.2.10](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/compare/webdriver-bidi-protocol-v0.2.9...webdriver-bidi-protocol-v0.2.10) (2025-09-09)
 
-* Fix an issue where `SourceNode`s from different versions of the source-map
-  library couldn't be used in conjunction with each other. See issue #142.
 
-## 0.1.41
+### Bug Fixes
 
-* Fix a bug with getting the source content of relative sources with a "./"
-  prefix. See issue #145 and [Bug 1090768](bugzil.la/1090768).
+* re-generate types based on specifciation updates ([#236](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/236)) ([7b33604](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/7b336043c3aaf0591c9f4729c00b949563274b08))
 
-* Add the `SourceMapConsumer.prototype.computeColumnSpans` method to compute the
-  column span of each mapping.
+## [0.2.9](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/compare/webdriver-bidi-protocol-v0.2.8...webdriver-bidi-protocol-v0.2.9) (2025-09-09)
 
-* Add the `SourceMapConsumer.prototype.allGeneratedPositionsFor` method to find
-  all generated positions associated with a given original source and line.
 
-## 0.1.40
+### Bug Fixes
 
-* Performance improvements for parsing source maps in SourceMapConsumer.
+* add emulation.setScriptingEnabled ([#234](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/234)) ([d1a7de7](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/d1a7de7dfb7abdc3178524457a5c011f32d08561))
 
-## 0.1.39
+## [0.2.8](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/compare/webdriver-bidi-protocol-v0.2.7...webdriver-bidi-protocol-v0.2.8) (2025-09-09)
 
-* Fix a bug where setting a source's contents to null before any source content
-  had been set before threw a TypeError. See issue #131.
 
-## 0.1.38
+### Bug Fixes
 
-* Fix a bug where finding relative paths from an empty path were creating
-  absolute paths. See issue #129.
+* re-generate types based on specifciation updates ([#233](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/233)) ([42c83fd](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/42c83fd2e364a3097da2494b4d2f7e1a6419358b))
+* use a helper for commands and events ([#231](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/231)) ([e302d10](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/e302d10cf32e02295b5910a541141d5435c80292))
 
-## 0.1.37
+## [0.2.7](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/compare/webdriver-bidi-protocol-v0.2.6...webdriver-bidi-protocol-v0.2.7) (2025-09-08)
 
-* Fix a bug where if the source root was an empty string, relative source paths
-  would turn into absolute source paths. Issue #124.
 
-## 0.1.36
+### Bug Fixes
 
-* Allow the `names` mapping property to be an empty string. Issue #121.
+* add emulation mapping ([#226](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/226)) ([f4851fe](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/f4851fe000293cad2aa38cf6d9290d4dd3dd27b4))
+* re-generate types based on specifciation updates ([#229](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/229)) ([fbf9511](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/fbf951111ca4eaafea5aa03c02292aa9331a6b8e))
 
-## 0.1.35
+## [0.2.6](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/compare/webdriver-bidi-protocol-v0.2.5...webdriver-bidi-protocol-v0.2.6) (2025-08-26)
 
-* A third optional parameter was added to `SourceNode.fromStringWithSourceMap`
-  to specify a path that relative sources in the second parameter should be
-  relative to. Issue #105.
 
-* If no file property is given to a `SourceMapGenerator`, then the resulting
-  source map will no longer have a `null` file property. The property will
-  simply not exist. Issue #104.
+### Bug Fixes
 
-* Fixed a bug where consecutive newlines were ignored in `SourceNode`s.
-  Issue #116.
+* re-generate types based on specifciation updates ([#221](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/221)) ([53d49a7](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/53d49a7ffcb5ef4de3f4f8f4828bf64e4552f599))
 
-## 0.1.34
+## [0.2.5](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/compare/webdriver-bidi-protocol-v0.2.4...webdriver-bidi-protocol-v0.2.5) (2025-08-08)
 
-* Make `SourceNode` work with windows style ("\r\n") newlines. Issue #103.
 
-* Fix bug involving source contents and the
-  `SourceMapGenerator.prototype.applySourceMap`. Issue #100.
+### Bug Fixes
 
-## 0.1.33
+* re-generate types based on specifciation updates ([#213](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/213)) ([eb37bb4](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/eb37bb4fb84ec00e23fe9bfa58dbb250abd2f040))
 
-* Fix some edge cases surrounding path joining and URL resolution.
+## [0.2.4](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/compare/webdriver-bidi-protocol-v0.2.3...webdriver-bidi-protocol-v0.2.4) (2025-08-01)
 
-* Add a third parameter for relative path to
-  `SourceMapGenerator.prototype.applySourceMap`.
 
-* Fix issues with mappings and EOLs.
+### Bug Fixes
 
-## 0.1.32
+* add latest commands to the mapping ([#207](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/207)) ([d53fd56](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/d53fd56538f068a88900475955a54a4ea74bf305))
 
-* Fixed a bug where SourceMapConsumer couldn't handle negative relative columns
-  (issue 92).
+## [0.2.3](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/compare/webdriver-bidi-protocol-v0.2.2...webdriver-bidi-protocol-v0.2.3) (2025-08-01)
 
-* Fixed test runner to actually report number of failed tests as its process
-  exit code.
 
-* Fixed a typo when reporting bad mappings (issue 87).
+### Bug Fixes
 
-## 0.1.31
+* re-generate types based on specifciation updates ([#202](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/202)) ([db6f116](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/db6f116160068345715e17c686f9ddf3bf53423f))
+* re-generate types based on specifciation updates ([#205](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/205)) ([8e75f89](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/8e75f892bdbce2360b271b4197154d9db65bb35a))
 
-* Delay parsing the mappings in SourceMapConsumer until queried for a source
-  location.
+## [0.2.2](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/compare/webdriver-bidi-protocol-v0.2.1...webdriver-bidi-protocol-v0.2.2) (2025-07-14)
 
-* Support Sass source maps (which at the time of writing deviate from the spec
-  in small ways) in SourceMapConsumer.
 
-## 0.1.30
+### Bug Fixes
 
-* Do not join source root with a source, when the source is a data URI.
+* re-generate types based on specifciation updates ([#190](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/190)) ([7387ba3](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/7387ba3287a187cc3a48d5ca4f735c650f8a2d1a))
 
-* Extend the test runner to allow running single specific test files at a time.
+## [0.2.1](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/compare/webdriver-bidi-protocol-v0.2.0...webdriver-bidi-protocol-v0.2.1) (2025-07-01)
 
-* Performance improvements in `SourceNode.prototype.walk` and
-  `SourceMapConsumer.prototype.eachMapping`.
 
-* Source map browser builds will now work inside Workers.
+### Bug Fixes
 
-* Better error messages when attempting to add an invalid mapping to a
-  `SourceMapGenerator`.
+* re-generate types based on specifciation updates ([#183](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/183)) ([daf944c](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/daf944c89cda0387cc0eac163c858515b60ea480))
+* re-generate types based on specifciation updates ([#187](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/187)) ([d847f6a](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/d847f6afbd310e9587c79a942e33e09afe654729))
 
-## 0.1.29
+## [0.2.0](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/compare/webdriver-bidi-protocol-v0.1.10...webdriver-bidi-protocol-v0.2.0) (2025-06-26)
 
-* Allow duplicate entries in the `names` and `sources` arrays of source maps
-  (usually from TypeScript) we are parsing. Fixes github issue 72.
 
-## 0.1.28
+### Features
 
-* Skip duplicate mappings when creating source maps from SourceNode; github
-  issue 75.
+* add bluetooth ([#66](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/66)) ([e42e8d9](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/e42e8d9896540020955d81b08066bdf92ed16602))
 
-## 0.1.27
 
-* Don't throw an error when the `file` property is missing in SourceMapConsumer,
-  we don't use it anyway.
+### Bug Fixes
 
-## 0.1.26
+* add repository ([#19](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/19)) ([91def9d](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/91def9dd0baeab3476e7154676e40d5a709da2c3))
+* another repository fix ([72c215c](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/72c215cbcf76c97317deff925d1ff73732ed5bab))
+* bump specs/webdriver-bidi from `0575bf7` to `9eaa877` ([#65](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/65)) ([d0ed8ef](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/d0ed8ef0254fb7786b5e2cd7b716aa772cc49fcd))
+* bump specs/webdriver-bidi from `05a283e` to `62b8dfe` ([#16](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/16)) ([51dac71](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/51dac71ca4ea2e4e85eee7ba82a6a8ac7ff584a4))
+* bump specs/webdriver-bidi from `0c366b0` to `a46d71b` ([#30](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/30)) ([c926381](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/c92638156ca8cbe36e2485fde2c3eca4b6d14cd7))
+* bump specs/webdriver-bidi from `0fa2d99` to `712c17f` ([#36](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/36)) ([5e35acb](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/5e35acb0af5663fdace139da9648a298adf4b863))
+* bump specs/webdriver-bidi from `287e9c6` to `0575bf7` ([#59](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/59)) ([20ec66a](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/20ec66ae46acdb49211991f603826bfbab0c0762))
+* bump specs/webdriver-bidi from `62b8dfe` to `0c366b0` ([#25](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/25)) ([e6da243](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/e6da2439e38f2c403319ce1dbed16c9b8029667d))
+* bump specs/webdriver-bidi from `712c17f` to `287e9c6` ([#43](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/43)) ([2f378f5](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/2f378f5890cbfec58e62f466b73fda0523083216))
+* bump specs/webdriver-bidi from `a46d71b` to `0fa2d99` ([#33](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/33)) ([596a0ab](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/596a0ab776e061bccbc67a4fc38db4d5cce84643))
+* document usage ([#7](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/7)) ([d98a6ee](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/d98a6ee23cbaa943440e2b40831a0c56aa0d6c18))
+* re-gen types based on the spec changes ([#75](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/75)) ([e95b00e](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/e95b00e96333781b8843325d928e75f49768f06f))
+* re-generate types based on specifciation updates ([#101](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/101)) ([c2aa431](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/c2aa431b0e7fe5c229f51d7b549fb6eb51009087))
+* re-generate types based on specifciation updates ([#105](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/105)) ([adec09b](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/adec09b1c6fc6a29952a9c0a641ebd5d22f7370d))
+* re-generate types based on specifciation updates ([#108](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/108)) ([00199dc](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/00199dc6e53e35cb12e1e67ce441a2d06f87e9ae))
+* re-generate types based on specifciation updates ([#114](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/114)) ([f1a380a](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/f1a380afeebcb5f9a2ab66732f0971336c80bb0e))
+* re-generate types based on specifciation updates ([#125](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/125)) ([95501b6](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/95501b6d1a81516aa55cd84af1a5d3f8c060174a))
+* re-generate types based on specifciation updates ([#128](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/128)) ([852b2ab](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/852b2abfacb13c969f82f9507cccb50a2bbfeca0))
+* re-generate types based on specifciation updates ([#140](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/140)) ([b769928](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/b769928b05cfc936a949384cc7b345f995895b54))
+* re-generate types based on specifciation updates ([#143](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/143)) ([946a803](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/946a80305ad8c226519667a3c4d6bfc84d7a8fe1))
+* re-generate types based on specifciation updates ([#147](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/147)) ([b568837](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/b5688371c4ce32b6d62ff6b1a08854f0c000bcbe))
+* re-generate types based on specifciation updates ([#154](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/154)) ([5e9bfdd](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/5e9bfdde05a80e6852dbd81ac4e124702765b11c))
+* re-generate types based on specifciation updates ([#156](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/156)) ([a917e79](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/a917e79b9abd17e312c52227310bfe8aa7e21abb))
+* re-generate types based on specifciation updates ([#162](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/162)) ([bb92e98](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/bb92e98a232b060cc94a058fef92e10d8f8d6601))
+* re-generate types based on specifciation updates ([#166](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/166)) ([42664dd](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/42664dd5c7401588e55dda5573c3b7096f700953))
+* re-generate types based on specifciation updates ([#178](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/178)) ([6ee5f05](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/6ee5f05ae9298e59ff34c4859543bebcc4ad658d))
+* re-generate types based on specifciation updates ([#83](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/83)) ([ac66a29](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/ac66a29bc3396c2bdabb133d5dfb63fc2b029add))
+* re-generate types based on specifciation updates ([#88](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/88)) ([d3c2c6f](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/d3c2c6fcf973551d4bef5cbee5291e3581ae257c))
+* re-generate types based on specifciation updates ([#95](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/95)) ([64abd1d](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/64abd1d65d99e75d7ec1e885fe22c0f093323843))
+* update repository ([28cf911](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/28cf911e59ad5b177df47d04fc012d8c9cfe7fde))
 
-* Fix SourceNode.fromStringWithSourceMap for empty maps. Fixes github issue 70.
+## [0.1.10](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/compare/webdriver-bidi-protocol-v0.1.9...webdriver-bidi-protocol-v0.1.10) (2025-06-26)
 
-## 0.1.25
 
-* Make compatible with browserify
+### Bug Fixes
 
-## 0.1.24
+* re-generate types based on specifciation updates ([#178](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/178)) ([6ee5f05](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/6ee5f05ae9298e59ff34c4859543bebcc4ad658d))
 
-* Fix issue with absolute paths and `file://` URIs. See
-  https://bugzilla.mozilla.org/show_bug.cgi?id=885597
+## [0.1.9](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/compare/webdriver-bidi-protocol-v0.1.8...webdriver-bidi-protocol-v0.1.9) (2025-06-03)
 
-## 0.1.23
 
-* Fix issue with absolute paths and sourcesContent, github issue 64.
+### Bug Fixes
 
-## 0.1.22
+* re-generate types based on specifciation updates ([#147](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/147)) ([b568837](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/b5688371c4ce32b6d62ff6b1a08854f0c000bcbe))
+* re-generate types based on specifciation updates ([#154](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/154)) ([5e9bfdd](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/5e9bfdde05a80e6852dbd81ac4e124702765b11c))
+* re-generate types based on specifciation updates ([#156](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/156)) ([a917e79](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/a917e79b9abd17e312c52227310bfe8aa7e21abb))
+* re-generate types based on specifciation updates ([#162](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/162)) ([bb92e98](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/bb92e98a232b060cc94a058fef92e10d8f8d6601))
+* re-generate types based on specifciation updates ([#166](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/166)) ([42664dd](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/42664dd5c7401588e55dda5573c3b7096f700953))
 
-* Ignore duplicate mappings in SourceMapGenerator. Fixes github issue 21.
+## [0.1.8](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/compare/webdriver-bidi-protocol-v0.1.7...webdriver-bidi-protocol-v0.1.8) (2025-04-04)
 
-## 0.1.21
 
-* Fixed handling of sources that start with a slash so that they are relative to
-  the source root's host.
+### Bug Fixes
 
-## 0.1.20
+* re-generate types based on specifciation updates ([#140](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/140)) ([b769928](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/b769928b05cfc936a949384cc7b345f995895b54))
+* re-generate types based on specifciation updates ([#143](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/143)) ([946a803](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/946a80305ad8c226519667a3c4d6bfc84d7a8fe1))
 
-* Fixed github issue #43: absolute URLs aren't joined with the source root
-  anymore.
+## [0.1.7](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/compare/webdriver-bidi-protocol-v0.1.6...webdriver-bidi-protocol-v0.1.7) (2025-03-06)
 
-## 0.1.19
 
-* Using Travis CI to run tests.
+### Bug Fixes
 
-## 0.1.18
+* re-generate types based on specifciation updates ([#114](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/114)) ([f1a380a](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/f1a380afeebcb5f9a2ab66732f0971336c80bb0e))
+* re-generate types based on specifciation updates ([#125](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/125)) ([95501b6](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/95501b6d1a81516aa55cd84af1a5d3f8c060174a))
+* re-generate types based on specifciation updates ([#128](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/128)) ([852b2ab](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/852b2abfacb13c969f82f9507cccb50a2bbfeca0))
 
-* Fixed a bug in the handling of sourceRoot.
+## [0.1.6](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/compare/webdriver-bidi-protocol-v0.1.5...webdriver-bidi-protocol-v0.1.6) (2025-01-20)
 
-## 0.1.17
 
-* Added SourceNode.fromStringWithSourceMap.
+### Bug Fixes
 
-## 0.1.16
+* re-generate types based on specifciation updates ([#108](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/108)) ([00199dc](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/00199dc6e53e35cb12e1e67ce441a2d06f87e9ae))
 
-* Added missing documentation.
+## [0.1.5](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/compare/webdriver-bidi-protocol-v0.1.4...webdriver-bidi-protocol-v0.1.5) (2025-01-19)
 
-* Fixed the generating of empty mappings in SourceNode.
 
-## 0.1.15
+### Bug Fixes
 
-* Added SourceMapGenerator.applySourceMap.
+* re-generate types based on specifciation updates ([#101](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/101)) ([c2aa431](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/c2aa431b0e7fe5c229f51d7b549fb6eb51009087))
+* re-generate types based on specifciation updates ([#105](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/105)) ([adec09b](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/adec09b1c6fc6a29952a9c0a641ebd5d22f7370d))
 
-## 0.1.14
+## [0.1.4](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/compare/webdriver-bidi-protocol-v0.1.3...webdriver-bidi-protocol-v0.1.4) (2025-01-08)
 
-* The sourceRoot is now handled consistently.
 
-## 0.1.13
+### Bug Fixes
 
-* Added SourceMapGenerator.fromSourceMap.
+* re-generate types based on specifciation updates ([#95](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/95)) ([64abd1d](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/64abd1d65d99e75d7ec1e885fe22c0f093323843))
 
-## 0.1.12
+## [0.1.3](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/compare/webdriver-bidi-protocol-v0.1.2...webdriver-bidi-protocol-v0.1.3) (2024-12-20)
 
-* SourceNode now generates empty mappings too.
 
-## 0.1.11
+### Bug Fixes
 
-* Added name support to SourceNode.
+* re-generate types based on specifciation updates ([#88](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/88)) ([d3c2c6f](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/d3c2c6fcf973551d4bef5cbee5291e3581ae257c))
 
-## 0.1.10
+## [0.1.2](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/compare/webdriver-bidi-protocol-v0.1.1...webdriver-bidi-protocol-v0.1.2) (2024-12-08)
 
-* Added sourcesContent support to the customer and generator.
+
+### Bug Fixes
+
+* re-generate types based on specifciation updates ([#83](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/83)) ([ac66a29](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/ac66a29bc3396c2bdabb133d5dfb63fc2b029add))
+
+## [0.1.1](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/compare/webdriver-bidi-protocol-v0.1.0...webdriver-bidi-protocol-v0.1.1) (2024-12-03)
+
+
+### Bug Fixes
+
+* re-gen types based on the spec changes ([#75](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/75)) ([e95b00e](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/e95b00e96333781b8843325d928e75f49768f06f))
+
+## [0.1.0](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/compare/webdriver-bidi-protocol-v0.0.9...webdriver-bidi-protocol-v0.1.0) (2024-12-02)
+
+
+### Features
+
+* add bluetooth ([#66](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/66)) ([e42e8d9](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/e42e8d9896540020955d81b08066bdf92ed16602))
+
+
+### Bug Fixes
+
+* add repository ([#19](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/19)) ([91def9d](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/91def9dd0baeab3476e7154676e40d5a709da2c3))
+* another repository fix ([72c215c](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/72c215cbcf76c97317deff925d1ff73732ed5bab))
+* bump specs/webdriver-bidi from `0575bf7` to `9eaa877` ([#65](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/65)) ([d0ed8ef](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/d0ed8ef0254fb7786b5e2cd7b716aa772cc49fcd))
+* bump specs/webdriver-bidi from `05a283e` to `62b8dfe` ([#16](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/16)) ([51dac71](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/51dac71ca4ea2e4e85eee7ba82a6a8ac7ff584a4))
+* bump specs/webdriver-bidi from `0c366b0` to `a46d71b` ([#30](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/30)) ([c926381](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/c92638156ca8cbe36e2485fde2c3eca4b6d14cd7))
+* bump specs/webdriver-bidi from `0fa2d99` to `712c17f` ([#36](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/36)) ([5e35acb](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/5e35acb0af5663fdace139da9648a298adf4b863))
+* bump specs/webdriver-bidi from `287e9c6` to `0575bf7` ([#59](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/59)) ([20ec66a](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/20ec66ae46acdb49211991f603826bfbab0c0762))
+* bump specs/webdriver-bidi from `62b8dfe` to `0c366b0` ([#25](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/25)) ([e6da243](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/e6da2439e38f2c403319ce1dbed16c9b8029667d))
+* bump specs/webdriver-bidi from `712c17f` to `287e9c6` ([#43](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/43)) ([2f378f5](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/2f378f5890cbfec58e62f466b73fda0523083216))
+* bump specs/webdriver-bidi from `a46d71b` to `0fa2d99` ([#33](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/33)) ([596a0ab](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/596a0ab776e061bccbc67a4fc38db4d5cce84643))
+* document usage ([#7](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/7)) ([d98a6ee](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/d98a6ee23cbaa943440e2b40831a0c56aa0d6c18))
+* update repository ([28cf911](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/28cf911e59ad5b177df47d04fc012d8c9cfe7fde))
+
+## [0.0.9](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/compare/webdriver-bidi-protocol-v0.0.8...webdriver-bidi-protocol-v0.0.9) (2024-09-03)
+
+
+### Bug Fixes
+
+* bump specs/webdriver-bidi from `0fa2d99` to `712c17f` ([#36](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/36)) ([5e35acb](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/5e35acb0af5663fdace139da9648a298adf4b863))
+* bump specs/webdriver-bidi from `712c17f` to `287e9c6` ([#43](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/43)) ([2f378f5](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/2f378f5890cbfec58e62f466b73fda0523083216))
+
+## [0.0.8](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/compare/webdriver-bidi-protocol-v0.0.7...webdriver-bidi-protocol-v0.0.8) (2024-07-10)
+
+
+### Bug Fixes
+
+* bump specs/webdriver-bidi from `a46d71b` to `0fa2d99` ([#33](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/33)) ([596a0ab](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/596a0ab776e061bccbc67a4fc38db4d5cce84643))
+
+## [0.0.7](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/compare/webdriver-bidi-protocol-v0.0.6...webdriver-bidi-protocol-v0.0.7) (2024-07-04)
+
+
+### Bug Fixes
+
+* bump specs/webdriver-bidi from `0c366b0` to `a46d71b` ([#30](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/30)) ([c926381](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/c92638156ca8cbe36e2485fde2c3eca4b6d14cd7))
+
+## [0.0.6](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/compare/webdriver-bidi-protocol-v0.0.5...webdriver-bidi-protocol-v0.0.6) (2024-07-02)
+
+
+### Bug Fixes
+
+* bump specs/webdriver-bidi from `62b8dfe` to `0c366b0` ([#25](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/25)) ([e6da243](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/e6da2439e38f2c403319ce1dbed16c9b8029667d))
+
+## [0.0.5](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/compare/webdriver-bidi-protocol-v0.0.4...webdriver-bidi-protocol-v0.0.5) (2024-06-28)
+
+
+### Bug Fixes
+
+* another repository fix ([72c215c](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/72c215cbcf76c97317deff925d1ff73732ed5bab))
+
+## [0.0.4](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/compare/webdriver-bidi-protocol-v0.0.3...webdriver-bidi-protocol-v0.0.4) (2024-06-28)
+
+
+### Bug Fixes
+
+* update repository ([28cf911](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/28cf911e59ad5b177df47d04fc012d8c9cfe7fde))
+
+## [0.0.3](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/compare/webdriver-bidi-protocol-v0.0.2...webdriver-bidi-protocol-v0.0.3) (2024-06-28)
+
+
+### Bug Fixes
+
+* add repository ([#19](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/19)) ([91def9d](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/91def9dd0baeab3476e7154676e40d5a709da2c3))
+
+## [0.0.2](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/compare/webdriver-bidi-protocol-v0.0.1...webdriver-bidi-protocol-v0.0.2) (2024-06-28)
+
+
+### Bug Fixes
+
+* bump specs/webdriver-bidi from `05a283e` to `62b8dfe` ([#16](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/16)) ([51dac71](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/51dac71ca4ea2e4e85eee7ba82a6a8ac7ff584a4))
+* document usage ([#7](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/issues/7)) ([d98a6ee](https://github.com/GoogleChromeLabs/webdriver-bidi-protocol/commit/d98a6ee23cbaa943440e2b40831a0c56aa0d6c18))

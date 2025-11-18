@@ -1,14 +1,12 @@
-const constants = { // just for envs without fs
-  S_IFMT: 61440,
-  S_IFDIR: 16384,
-  S_IFCHR: 8192,
-  S_IFBLK: 24576,
-  S_IFIFO: 4096,
-  S_IFLNK: 40960
-}
+'use strict';
 
-try {
-  module.exports = require('fs').constants || constants
-} catch {
-  module.exports = constants
-}
+module.exports = {
+  BINARY_TYPES: ['nodebuffer', 'arraybuffer', 'fragments'],
+  EMPTY_BUFFER: Buffer.alloc(0),
+  GUID: '258EAFA5-E914-47DA-95CA-C5AB0DC85B11',
+  kForOnEventAttribute: Symbol('kIsForOnEventAttribute'),
+  kListener: Symbol('kListener'),
+  kStatusCode: Symbol('status-code'),
+  kWebSocket: Symbol('websocket'),
+  NOOP: () => {}
+};
